@@ -1,3 +1,5 @@
+import {FC} from "react";
+
 interface LogoProps {
     color: string;
 }
@@ -65,20 +67,124 @@ const Search = ({color}: LogoProps) => {
             stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>);
 };
-const Cross = ({color}:LogoProps) => {
+const Cross = ({color}: LogoProps) => {
     return (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path d="M19 19L1 1M19 1L1 19" stroke={color} strokeWidth="2" strokeLinecap="round"/>
     </svg>)
 }
 
-const Arrow = ({color} : LogoProps) => {
+const Arrow = ({color}: LogoProps) => {
     return (<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path d="M12.5 15L7.5 10L12.5 5" stroke={color} strokeWidth="1.67" strokeLinecap="round"
               strokeLinejoin="round"/>
     </svg>)
 }
+
+const Settings: React.FC<LogoProps> = ({color}) => {
+    return (<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <path
+            d="M33.3389 30.915H23.3347"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M18.3327 30.915H6.66113"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M33.3389 20.0002H20"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M14.9979 20.0002H6.66113"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M33.3389 9.08539H26.6694"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M21.6674 9.08539H6.66113"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M23.3347 35.0066V26.8228"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M14.9977 24.0921V15.9082"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+        <path
+            d="M26.6694 13.1773V4.99341"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        />
+    </svg>);
+};
+
+const Arrows: FC<LogoProps> = ({color}) => {
+    return (<svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 55 55" fill="none">
+        <path d="M22.916 18.3333L16.041 11.4583L9.16602 18.3333" stroke={color} strokeWidth="3" strokeLinecap="round"
+              strokeLinejoin="round"/>
+        <path d="M16.0404 43.5416V11.4583" stroke={color} strokeWidth="3" strokeLinecap="round"
+              strokeLinejoin="round"/>
+        <path d="M32.082 36.6666L38.957 43.5416L45.832 36.6666" stroke={color} strokeWidth="3" strokeLinecap="round"
+              strokeLinejoin="round"/>
+        <path d="M38.9583 11.4583V43.5416" stroke={color} strokeWidth="3" strokeLinecap="round"
+              strokeLinejoin="round"/>
+    </svg>)
+}
+
+const Trash: FC<LogoProps> = ({color}) => {
+    return (<svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" viewBox="0 0 33 32" fill="none">
+        <path
+            d="M4.5 8.00008H7.16667M7.16667 8.00008H28.5M7.16667 8.00008V26.6667C7.16667 27.374 7.44762 28.0523 7.94772 28.5524C8.44781 29.0525 9.12609 29.3334 9.83333 29.3334H23.1667C23.8739 29.3334 24.5522 29.0525 25.0523 28.5524C25.5524 28.0523 25.8333 27.374 25.8333 26.6667V8.00008H7.16667ZM11.1667 8.00008V5.33341C11.1667 4.62617 11.4476 3.94789 11.9477 3.4478C12.4478 2.9477 13.1261 2.66675 13.8333 2.66675H19.1667C19.8739 2.66675 20.5522 2.9477 21.0523 3.4478C21.5524 3.94789 21.8333 4.62617 21.8333 5.33341V8.00008M13.8333 14.6667V22.6667M19.1667 14.6667V22.6667"
+            stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>)
+
+}
+
+const Minus: FC<LogoProps> = ({color}) => {
+    return (<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M3.75 9H14.25" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>)
+}
+const Plus: FC<LogoProps> = ({color}) => {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10.0003 4.16675V15.8334M4.16699 10.0001H15.8337" stroke={color} strokeWidth="1.5"
+                  strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    )
+}
 const SVG = {
-    Logo, Vector, Bucket, Like, User, Search, Cross, Arrow
+    Logo, Vector, Bucket, Like, User, Search, Cross, Arrow, Settings, Arrows, Trash, Minus, Plus
 };
 
 export default SVG;

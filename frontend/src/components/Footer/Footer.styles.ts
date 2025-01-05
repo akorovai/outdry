@@ -1,8 +1,8 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 import { colors, fonts } from '../../consts';
 
-// Reusable Typography Components
-export const Text = styled.p<{ size?: number; weight?: number; lineHeight?: number }>`
+export const Text = styled(motion.p)<{ size?: number; weight?: number; lineHeight?: number }>`
     color: ${colors.WHITE};
     font-family: ${fonts.POPPINS};
     font-size: ${({ size }) => size || 16}px;
@@ -10,7 +10,6 @@ export const Text = styled.p<{ size?: number; weight?: number; lineHeight?: numb
     font-weight: ${({ weight }) => weight || 400};
     line-height: ${({ lineHeight }) => lineHeight || 24}px;
 `;
-
 
 export const SectionTitle = styled(Text).attrs({
     size: 20,
@@ -26,14 +25,15 @@ export const SectionLink = styled(Text).attrs({
     cursor: pointer;
     &:hover {
         text-decoration: underline;
+        transform: translateX(5px); /* Add a hover animation */
+        transition: transform 0.2s ease-in-out;
     }
 `;
 
-// Layout Components
-export const FooterWrapper = styled.div`
+export const FooterWrapper = styled(motion.div)`
     display: flex;
     height: 438px;
-    padding: 100px 80px;
+    padding: 100px 100px;
     align-items: center;
     gap: 28px;
     width: 100%;
@@ -42,21 +42,15 @@ export const FooterWrapper = styled.div`
     box-sizing: border-box;
 `;
 
-export const BrandSection = styled.div`
+export const BrandSection = styled(motion.div)`
     display: flex;
     width: 338px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 159px;
+    gap: 160px;
 `;
 
-export const BrandLogo = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 8px;
-`;
-
-export const LinksSection = styled.div`
+export const LinksSection = styled(motion.div)`
     display: flex;
     justify-content: flex-end;
     align-items: flex-start;
@@ -64,20 +58,20 @@ export const LinksSection = styled.div`
     gap: 146px;
 `;
 
-export const LinksContainer = styled.div`
+export const LinksContainer = styled(motion.div)`
     display: flex;
     align-items: flex-start;
     gap: 80px;
 `;
 
-export const LinkGroup = styled.div`
+export const LinkGroup = styled(motion.div)`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 32px;
 `;
 
-export const LinkList = styled.div`
+export const LinkList = styled(motion.div)`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
