@@ -17,7 +17,6 @@ const Footer: React.FC = (): React.ReactElement => {
         console.log(`Clicked on: ${linkName}`);
     };
 
-
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -31,6 +30,10 @@ const Footer: React.FC = (): React.ReactElement => {
     const childVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
+    };
+
+    const linkHoverVariants = {
+        hover: { scale: 1.05, x: 5 },
     };
 
     return (
@@ -52,19 +55,22 @@ const Footer: React.FC = (): React.ReactElement => {
                         <LinkList>
                             <SectionLink
                                 onClick={() => handleLinkClick('Shipping & Return')}
-                                whileHover={{ scale: 1.05 }} // Add hover animation
+                                variants={linkHoverVariants}
+                                whileHover="hover"
                             >
                                 Shipping & Return
                             </SectionLink>
                             <SectionLink
                                 onClick={() => handleLinkClick('Privacy Policy')}
-                                whileHover={{ scale: 1.05 }}
+                                variants={linkHoverVariants}
+                                whileHover="hover"
                             >
                                 Privacy Policy
                             </SectionLink>
                             <SectionLink
                                 onClick={() => handleLinkClick('Terms of Service')}
-                                whileHover={{ scale: 1.05 }}
+                                variants={linkHoverVariants}
+                                whileHover="hover"
                             >
                                 Terms of Service
                             </SectionLink>
@@ -75,25 +81,29 @@ const Footer: React.FC = (): React.ReactElement => {
                         <LinkList>
                             <SectionLink
                                 onClick={() => handleLinkClick('Ambassador Program')}
-                                whileHover={{ scale: 1.05 }}
+                                variants={linkHoverVariants}
+                                whileHover="hover"
                             >
                                 Ambassador Program
                             </SectionLink>
                             <SectionLink
                                 onClick={() => handleLinkClick('Discounts')}
-                                whileHover={{ scale: 1.05 }}
+                                variants={linkHoverVariants}
+                                whileHover="hover"
                             >
                                 Discounts
                             </SectionLink>
                             <SectionLink
                                 onClick={() => handleLinkClick('Help Center')}
-                                whileHover={{ scale: 1.05 }}
+                                variants={linkHoverVariants}
+                                whileHover="hover"
                             >
                                 Help Center
                             </SectionLink>
                             <SectionLink
                                 onClick={() => handleLinkClick('Contact Us')}
-                                whileHover={{ scale: 1.05 }}
+                                variants={linkHoverVariants}
+                                whileHover="hover"
                             >
                                 Contact Us
                             </SectionLink>

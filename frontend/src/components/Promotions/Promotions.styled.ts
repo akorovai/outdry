@@ -5,7 +5,7 @@ import { colors } from "../../consts";
 export const SectionContainer = styled(motion.div)`
     display: flex;
     width: 100%;
-    padding: 0 0 80px 0;
+    padding: 80px 0 80px 0;
     flex-direction: column;
     align-items: center;
     gap: 50px;
@@ -118,7 +118,7 @@ export const CardsContainer = styled(motion.div)`
     width: 100%;
     padding: 0 100px;
     align-items: flex-start;
-    gap: 16px;
+    gap: 10px;
     overflow: hidden;
 
     @media (max-width: 1600px) {

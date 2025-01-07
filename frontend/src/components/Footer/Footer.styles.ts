@@ -2,32 +2,45 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { colors, fonts } from '../../consts';
 
-export const Text = styled(motion.p)<{ size?: number; weight?: number; lineHeight?: number }>`
+// Определяем интерфейс для пропсов
+interface TextProps {
+    size?: number;
+    weight?: number;
+    lineHeight?: number;
+}
+
+// Используем интерфейс для типизации пропсов
+export const Text = styled(motion.p).attrs<TextProps>(({ size, weight, lineHeight }) => ({
+    style: {
+        fontSize: `${size || 16}px`,
+        fontWeight: weight || 400,
+        lineHeight: `${lineHeight || 24}px`,
+    },
+}))<TextProps>`
     color: ${colors.WHITE};
     font-family: ${fonts.POPPINS};
-    font-size: ${({ size }) => size || 16}px;
     font-style: normal;
-    font-weight: ${({ weight }) => weight || 400};
-    line-height: ${({ lineHeight }) => lineHeight || 24}px;
 `;
 
+// Применяем атрибуты по умолчанию
 export const SectionTitle = styled(Text).attrs({
     size: 20,
     weight: 700,
     lineHeight: 30,
 })``;
 
-export const SectionLink = styled(Text).attrs({
-    size: 18,
-    weight: 400,
-    lineHeight: 28,
-})`
+// Используем motion.p и передаем пропсы через attrs
+export const SectionLink = styled(motion.p).attrs<TextProps>(({ size, weight, lineHeight }) => ({
+    style: {
+        fontSize: `${size || 18}px`,
+        fontWeight: weight || 400,
+        lineHeight: `${lineHeight || 28}px`,
+    },
+}))<TextProps>`
     cursor: pointer;
-    &:hover {
-        text-decoration: underline;
-        transform: translateX(5px); /* Add a hover animation */
-        transition: transform 0.2s ease-in-out;
-    }
+    color: ${colors.WHITE};
+    font-family: ${fonts.POPPINS};
+    font-style: normal;
 `;
 
 export const FooterWrapper = styled(motion.div)`

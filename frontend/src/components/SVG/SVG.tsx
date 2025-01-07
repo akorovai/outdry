@@ -183,8 +183,16 @@ const Plus: FC<LogoProps> = ({color}) => {
         </svg>
     )
 }
+
+const Star: FC<LogoProps> = ({color}) => {
+    return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none">
+        <path
+            d="M9.99935 2.16666L12.5743 7.38333L18.3327 8.225L14.166 12.2833L15.1493 18.0167L9.99935 15.3083L4.84935 18.0167L5.83268 12.2833L1.66602 8.225L7.42435 7.38333L9.99935 2.16666Z"
+            stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>)
+}
 const SVG = {
-    Logo, Vector, Bucket, Like, User, Search, Cross, Arrow, Settings, Arrows, Trash, Minus, Plus
+    Logo, Vector, Bucket, Like, User, Search, Cross, Arrow, Settings, Arrows, Trash, Minus, Plus, Star
 };
 
 export default SVG;

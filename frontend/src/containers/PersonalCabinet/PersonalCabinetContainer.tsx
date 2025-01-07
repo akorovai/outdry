@@ -26,7 +26,7 @@ const PersonalCabinet: React.FC = (): React.ReactElement => {
     };
 
     const options = [
-        { key: "Overview", component: <Overview /> },
+        { key: "Overview", component: <Overview setActiveMenuOption={setSelectedOption} /> },
         { key: "Orders", component: <Orders /> },
         { key: "Address Book", component: <AddressBook /> },
         { key: "Log Out", component: <LogOut /> },

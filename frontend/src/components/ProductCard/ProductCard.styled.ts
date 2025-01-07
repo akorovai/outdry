@@ -4,10 +4,10 @@ import { colors, fonts } from "../../consts";
 
 export const ProductCardContainer = styled(motion.div)`
     display: flex;
-    width: 260px;
+    width: 235px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: 24px;
     flex-shrink: 0;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;

@@ -80,8 +80,10 @@ export const AddressList = styled.div`
     gap: 1rem;
     align-self: stretch;
     flex: 1;
+    overflow-x: hidden  ;
     overflow-y: auto;
-    padding-right: 0.625rem;
+    padding: 0 0.15rem;
+    
 
     &::-webkit-scrollbar {
         width: 8px;
@@ -98,6 +100,7 @@ export const AddressList = styled.div`
         background: ${colors.LIGHT_GREY_600};
     }
 `;
+
 
 export const StoredAdrressText = styled.div`
     color: ${colors.BLACK};
@@ -121,11 +124,10 @@ export const AddressItem = styled.div`
     margin: 0.25rem 0;
 
     &:hover {
-        transform: scale(1.01);
+        transform: scale(1.005); 
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 `;
-
 export const AddressFunctions = styled.div`
     display: flex;
     justify-content: space-between;

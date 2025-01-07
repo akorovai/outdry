@@ -1,7 +1,122 @@
 {
-  "settings": {
-    "import/resolver": {
-      "typescript": {}
-    }
+  "root": true,
+  "env": { "browser": true, "es2020": true },
+  "extends": [
+    // order of extends is important
+    // base rules
+    "eslint:recommended",
+    // adjusts base rules that are covered by typescript
+    "plugin:@typescript-eslint/strict-type-checked",
+    // stylistic rules for TypeScript without impact on the logic
+    "plugin:@typescript-eslint/stylistic-type-checked",
+    // adds rules for react
+    "plugin:react/recommended",
+    // adds rules for react hooks
+    "plugin:react-hooks/recommended"
+  ],
+  "ignorePatterns": ["dist"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": { "project": ["./tsconfig.json", "./tsconfig.node.json"] },
+  "plugins": ["react-refresh", "perfectionist", "react-func"],
+  "settings": { "react": { "version": "detect" } },
+  "rules": {
+    "prefer-arrow-callback": "error",
+    "no-negated-condition": "error",
+    "no-nested-ternary": "error",
+    "no-unneeded-ternary": "error",
+    "one-var": ["error", "never"],
+    "no-else-return": "error",
+    "no-multiple-empty-lines": ["error", { "max": 1 }],
+    "eqeqeq": "error",
+    "max-params": ["error", 7],
+    "prefer-object-has-own": "warn",
+    "quotes": ["warn", "double", { "avoidEscape": true }],
+    "max-depth": ["warn", 4],
+    "max-nested-callbacks": ["warn", 3],
+    "max-len": ["warn", { "code": 180, "comments": 200, "ignorePattern": "^import\\W.*" }],
+    "no-constant-condition": "warn",
+    "no-implicit-coercion": "warn",
+    "no-param-reassign": "warn",
+    "curly": "warn",
+    "no-empty-pattern": "warn",
+    "no-console": "warn",
+    "no-magic-numbers": "off",
+    "no-return-await": "off",
+    "no-empty": "off",
+    "no-mixed-operators": "off",
+    // disable default exports inside the project to prevent copy-paste typos
+    // disable to use keyword undefined in types, interfaces, arrow functions and functions, instead of use ?:
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ExportDefaultDeclaration",
+        "message": "Prefer named export instead of default export"
+      },
+      {
+        "selector": "FunctionDeclaration > Identifier:not([optional=true]).params > TSTypeAnnotation > TSUnionType:has(TSUndefinedKeyword)",
+        "message": "Prefer optional prop unsing ? instead of undefined"
+      },
+      {
+        "selector": "VariableDeclaration > VariableDeclarator > ArrowFunctionExpression > Identifier.params > TSTypeAnnotation > TSUnionType:has(TSUndefinedKeyword)",
+        "message": "Prefer optional prop unsing ? instead of undefined"
+      },
+      {
+        "selector": "TSTypeAliasDeclaration > TSTypeLiteral > TSPropertySignature > TSTypeAnnotation > TSUnionType:has(TSUndefinedKeyword)",
+        "message": "Prefer optional prop unsing ? instead of undefined"
+      },
+      {
+        "selector": "TSInterfaceDeclaration > TSInterfaceBody > TSPropertySignature > TSTypeAnnotation > TSUnionType:has(TSUndefinedKeyword)",
+        "message": "Prefer optional prop unsing ? instead of undefined"
+      },
+      {
+        "selector": "VariableDeclaration > VariableDeclarator > CallExpression > Identifier[name='useState']",
+        "message": "Use useReadonlyState() hook instead of useState!"
+      }
+    ],
+    "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": "off",
+    "@typescript-eslint/no-unsafe-enum-comparison": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-empty-interface": "warn",
+    "@typescript-eslint/no-empty-function": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-confusing-void-expression": ["warn", { "ignoreArrowShorthand": true }],
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/default-param-last": "warn",
+    "@typescript-eslint/array-type": ["warn", { "default": "array" }],
+    "@typescript-eslint/explicit-module-boundary-types": "warn",
+    "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/method-signature-style": "error",
+    "@typescript-eslint/promise-function-async": "error",
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-unnecessary-condition": ["error", { "allowConstantLoopConditions": true }],
+    "@typescript-eslint/return-await": ["error", "always"],
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/jsx-curly-brace-presence": "warn",
+    "react/jsx-boolean-value": "warn",
+    "react/function-component-definition": [
+      "warn",
+      { "namedComponents": "arrow-function", "unnamedComponents": "arrow-function" }
+    ],
+    "react-refresh/only-export-components": ["warn", { "allowConstantExport": true }],
+    "react-func/max-combined-conditions": ["error", 2],
+    "perfectionist/sort-imports": [
+      "warn",
+      {
+        "type": "natural",
+        "order": "asc",
+        "groups": [
+          "type",
+          ["builtin", "external"],
+          "internal-type",
+          "internal",
+          ["parent-type", "sibling-type", "index-type"],
+          ["parent", "sibling", "index"],
+          "object",
+          "unknown"
+        ]
+      }
+    ]
   }
 }

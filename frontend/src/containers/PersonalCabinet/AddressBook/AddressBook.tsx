@@ -28,7 +28,7 @@ type Address = {
 };
 
 const AddressBook: React.FC = (): React.ReactElement => {
-    // State for managing addresses
+
     const [addresses, setAddresses] = useState<Address[]>([
         {
             id: 1,
@@ -48,11 +48,11 @@ const AddressBook: React.FC = (): React.ReactElement => {
         },
     ]);
 
-    // State for tracking which address is being edited
+
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editedAddress, setEditedAddress] = useState<Address | null>(null);
 
-    // State for tracking if a new address is being added
+
     const [isAddingNewAddress, setIsAddingNewAddress] = useState<boolean>(false);
     const [newAddress, setNewAddress] = useState<Address>({
         id: 0,
@@ -63,7 +63,7 @@ const AddressBook: React.FC = (): React.ReactElement => {
         zipCode: "",
     });
 
-    // Function to add a new address
+
     const handleAddAddress = () => {
         setIsAddingNewAddress(true);
         setNewAddress({
@@ -76,23 +76,23 @@ const AddressBook: React.FC = (): React.ReactElement => {
         });
     };
 
-    // Function to handle input changes for new address
+
     const handleNewAddressInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof Address) => {
         setNewAddress({ ...newAddress, [field]: e.target.value });
     };
 
-    // Function to save the new address
+
     const handleSaveNewAddress = () => {
-        setAddresses([newAddress, ...addresses]); // Добавляем новый адрес в начало списка
+        setAddresses([newAddress, ...addresses]);
         setIsAddingNewAddress(false);
     };
 
-    // Function to cancel adding new address
+
     const handleCancelNewAddress = () => {
         setIsAddingNewAddress(false);
     };
 
-    // Function to start editing an address
+
     const handleEditAddress = (id: number) => {
         const addressToEdit = addresses.find((address) => address.id === id);
         if (addressToEdit) {
@@ -101,14 +101,14 @@ const AddressBook: React.FC = (): React.ReactElement => {
         }
     };
 
-    // Function to handle input changes
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof Address) => {
         if (editedAddress) {
             setEditedAddress({ ...editedAddress, [field]: e.target.value });
         }
     };
 
-    // Function to save the edited address
+
     const handleSaveAddress = () => {
         if (editedAddress) {
             const updatedAddresses = addresses.map((address) =>
@@ -120,7 +120,7 @@ const AddressBook: React.FC = (): React.ReactElement => {
         }
     };
 
-    // Function to delete an address
+
     const handleDeleteAddress = (id: number) => {
         const filteredAddresses = addresses.filter((address) => address.id !== id);
         setAddresses(filteredAddresses);

@@ -1,7 +1,36 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "types": ["@testing-library/jest-dom", "vitest/globals", "vite-plugin-svgr/client"],
+    "baseUrl": "./src",
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    // These are already covered by eslint as warnings, which makes it easier to test temporary code
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    "paths": {
+      "@/*": ["./*"],
+      "@assets/*": ["./assets/*"],
+      "@components/*": ["./components/*"],
+      "@consts/*": ["./consts/*"],
+      "@containers/*": ["./containers/*"],
+      "@pages/*": ["./pages/*"]
+    }
+  },
+  // https://www.npmjs.com/package/@testing-library/jest-dom?activeTab=readme#with-typescript
+  "include": ["src", "vitest-setup.ts"],
+  "exclude": ["vite.config.ts"]
 }
