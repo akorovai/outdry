@@ -6,6 +6,8 @@ import PersonalCabinetPage from './PersonalCabinetPage/PersonalCabinetPage.tsx'
 import LoginPage from './LoginPage/LoginPage.tsx'
 import RegisterPage from './RegisterPage/RegisterPage.tsx'
 import ForgetPasswordPage from './ForgetPasswordPage/ForgetPasswordPage.tsx'
+import TermsAndConditionsPage from './TermsAndConditionsPage/TermsAndConditionsPage.tsx'
+import CheckoutPage from './CheckoutPage/CheckoutPage.tsx'
 export {
   HomePage,
   ProductsPage,
@@ -15,4 +17,6 @@ export {
   LoginPage,
   RegisterPage,
   ForgetPasswordPage,
+  TermsAndConditionsPage,
+  CheckoutPage,
 }

@@ -6,6 +6,11 @@ import CustomerReviews from './CustomerReviews/CustomerReviews.tsx'
 import LoginPageContainer from './LoginPageContainer/LoginPageContainer.tsx'
 import RegisterPageContainer from './RegisterPageContainer/RegisterPageContainer.tsx'
 import ForgetPasswordContainer from './ForgetPasswordContainer/ForgetPasswordContainer.tsx'
+
+import TermsAndConditions from './TermsAndConditions/TermsAndConditions.tsx'
+
+import CheckoutContainer from './Checkout/CheckoutContainer.tsx'
+
 export {
   HeroSection,
   PromotionsSection,
@@ -14,4 +19,6 @@ export {
   LoginPageContainer,
   RegisterPageContainer,
   ForgetPasswordContainer,
+  TermsAndConditions,
+  CheckoutContainer,
 }

@@ -1,3 +1,3 @@
 import InputField from './InputField/InputField.tsx'
-
-export { InputField }
+import CheckoutInput from './CheckoutInput/CheckoutInput.tsx'
+export { InputField, CheckoutInput }

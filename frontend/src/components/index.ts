@@ -20,6 +20,8 @@ import SplitContainer from './SplitContainer/SplitContainer.tsx'
 
 import ContentContainer from './ContentContainer/ContentContainer.tsx'
 import FormContainer from './FormContainer/FormContainer.tsx'
+
+import CheckoutInput from './Input/CheckoutInput/CheckoutInput.tsx'
 export {
   SVG,
   Footer,
@@ -38,4 +40,5 @@ export {
   SplitContainer,
   ContentContainer,
   FormContainer,
+  CheckoutInput,
 }

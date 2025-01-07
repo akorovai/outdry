@@ -8,7 +8,9 @@ import {
   ProductPage,
   ProductsPage,
   RegisterPage,
+  TermsAndConditionsPage,
   WhishListPage,
+  CheckoutPage,
 } from '@/pages'
 import routePath from '@/consts/routePath'
 
@@ -23,6 +25,8 @@ const App = () => {
       <Route path={routePath.LOGIN} element={<LoginPage />} />
       <Route path={routePath.REGISTRATION} element={<RegisterPage />} />
       <Route path={routePath.FORGET_PASSWORD} element={<ForgetPasswordPage />} />
+      <Route path={routePath.TERMS_AND_CONDITIONS} element={<TermsAndConditionsPage />} />
+      <Route path={routePath.CHECKOUT} element={<CheckoutPage />} />
       <Route path='*' element={<Navigate to={'/'} />} />
     </Routes>
   )

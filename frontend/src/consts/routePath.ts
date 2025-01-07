@@ -7,6 +7,8 @@ enum routePath {
   LOGIN = '/login',
   REGISTRATION = '/register',
   FORGET_PASSWORD = '/forgot-password',
+  TERMS_AND_CONDITIONS = '/terms-and-conditions',
+  CHECKOUT = '/checkout',
 }
 
 export default routePath
