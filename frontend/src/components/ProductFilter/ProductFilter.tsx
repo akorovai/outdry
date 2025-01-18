@@ -10,38 +10,47 @@ import {
   FeaturedContainer,
   ProductsText,
 } from './ProductFilter.styled.ts'
-import { colors } from '@/consts'
+import { colors as colorConsts } from '@/consts'
 
 interface IProductFilterProps {
   number_of_products: number
   title: string
+  onFilterChange: (filters: {
+    sizes: string[]
+    productTypes: string[]
+    colors: string[]
+    genders: string[]
+    prices: string[]
+  }) => void
+  onSortChange: (sortOption: string) => void
+  sizes: string[]
+  productTypes: string[]
+  availableColors: string[]
+  genders: string[]
+  prices: string[]
+  category: string
 }
 
-const ProductFilter: React.FC<IProductFilterProps> = ({ number_of_products, title }): React.ReactElement => {
+const ProductFilter: React.FC<IProductFilterProps> = ({
+  number_of_products,
+  title,
+  onFilterChange,
+  onSortChange,
+  sizes,
+  productTypes,
+  availableColors,
+  genders,
+  prices,
+  category,
+}): React.ReactElement => {
   const [selectedSizes, setSelectedSizes] = useState<string[]>([])
   const [selectedProductTypes, setSelectedProductTypes] = useState<string[]>([])
   const [selectedColors, setSelectedColors] = useState<string[]>([])
   const [selectedGenders, setSelectedGenders] = useState<string[]>([])
   const [selectedPrices, setSelectedPrices] = useState<string[]>([])
-  const [selectedSort, setSelectedSort] = useState<string>('Featured')
+  const [selectedSort, setSelectedSort] = useState<string>('')
 
-  const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
-  const productTypes = [
-    'Blouses',
-    'T-shirts',
-    'Robes',
-    'Coots',
-    'Jackets',
-    'Dungarees',
-    'Shirts',
-    'Sweatshirts',
-    'Swimwear',
-  ]
-  const colorsList = ['Black', 'Blue', 'Brown', 'Grey', 'Orange', 'Pink', 'Purple', 'Red', 'White', 'Yellow']
-  const genders = ['Boys', 'Girls', 'Mens', 'Womens', 'Unisex']
-  const prices = ['$0-50', '$50-100', '$100-150', '$150-200', '$200-250', '$250-300']
   const sortOptions = [
-    'Featured',
     'Best selling',
     'Alphabetically A-Z',
     'Alphabetically Z-A',
@@ -49,20 +58,58 @@ const ProductFilter: React.FC<IProductFilterProps> = ({ number_of_products, titl
     'Price, high to low',
   ]
 
+  const shouldShowGenderFilter = !['men', 'women', 'girls', 'boys', 'unisex'].includes(category)
+
   const handleFilterChange = (
     selected: string[],
     setSelected: React.Dispatch<React.SetStateAction<string[]>>,
     value: string,
   ) => {
+    let newSelected
     if (selected.includes(value)) {
-      setSelected(selected.filter(item => item !== value))
+      newSelected = selected.filter(item => item !== value)
     } else {
-      setSelected([...selected, value])
+      newSelected = [...selected, value]
     }
+    setSelected(newSelected)
+
+    onFilterChange({
+      sizes: selectedSizes,
+      productTypes: selectedProductTypes,
+      colors: selectedColors,
+      genders: selectedGenders,
+      prices: selectedPrices,
+    })
   }
 
   const handleSortChange = (option: string) => {
-    setSelectedSort(option)
+    if (selectedSort === option) {
+      setSelectedSort('')
+      onSortChange('')
+    } else {
+      setSelectedSort(option)
+      onSortChange(option)
+    }
+  }
+
+  const resetFilters = () => {
+    setSelectedSizes([])
+    setSelectedProductTypes([])
+    setSelectedColors([])
+    setSelectedGenders([])
+    setSelectedPrices([])
+    onFilterChange({
+      sizes: [],
+      productTypes: [],
+      colors: [],
+      genders: [],
+      prices: [],
+    })
+  }
+
+  const resetSort = () => {
+    setSelectedSort('')
+    onSortChange('')
   }
 
   return (
@@ -77,8 +124,8 @@ const ProductFilter: React.FC<IProductFilterProps> = ({ number_of_products, titl
       </FilterHeader>
       <FiltersContainer>
         <DropDownContainers>
-          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-            <SVG.Settings color={colors.BLACK} />
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={resetFilters}>
+            <SVG.Settings color={colorConsts.BLACK} />
           </motion.div>
           <DropdownMenu
             options={sizes}
@@ -93,17 +140,19 @@ const ProductFilter: React.FC<IProductFilterProps> = ({ number_of_products, titl
             placeholder='Product Type'
           />
           <DropdownMenu
-            options={colorsList}
+            options={availableColors}
             selectedOptions={selectedColors}
             onOptionChange={color => handleFilterChange(selectedColors, setSelectedColors, color)}
             placeholder='Color'
           />
-          <DropdownMenu
-            options={genders}
-            selectedOptions={selectedGenders}
-            onOptionChange={gender => handleFilterChange(selectedGenders, setSelectedGenders, gender)}
-            placeholder='Gender'
-          />
+          {shouldShowGenderFilter && (
+            <DropdownMenu
+              options={genders}
+              selectedOptions={selectedGenders}
+              onOptionChange={gender => handleFilterChange(selectedGenders, setSelectedGenders, gender)}
+              placeholder='Gender'
+            />
+          )}
           <DropdownMenu
             options={prices}
             selectedOptions={selectedPrices}
@@ -112,14 +161,14 @@ const ProductFilter: React.FC<IProductFilterProps> = ({ number_of_products, titl
           />
         </DropDownContainers>
         <FeaturedContainer>
-          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-            <SVG.Arrows color={colors.BLACK} />
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={resetSort}>
+            <SVG.Arrows color={colorConsts.BLACK} />
           </motion.div>
           <DropdownMenu
             options={sortOptions}
-            selectedOptions={[selectedSort]}
+            selectedOptions={selectedSort ? [selectedSort] : []}
             onOptionChange={handleSortChange}
-            placeholder='Featured'
+            placeholder={selectedSort || 'Featured'}
           />
           <ProductsText>{number_of_products} products</ProductsText>
         </FeaturedContainer>

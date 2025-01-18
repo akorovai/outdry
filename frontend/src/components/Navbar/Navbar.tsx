@@ -76,8 +76,9 @@ const Navbar: React.FC<NavbarProps> = ({ isMinimal = false }): React.ReactElemen
               <CategoryText to={createPath('new-in')}>New in</CategoryText>
               <CategoryText to={createPath('men')}>Men</CategoryText>
               <CategoryText to={createPath('women')}>Women</CategoryText>
-              <CategoryText to={createPath('kids')}>Kids</CategoryText>
-              <CategoryText to={createPath('accessories')}>Accessories</CategoryText>
+              <CategoryText to={createPath('boys')}>Boys</CategoryText>
+              <CategoryText to={createPath('girls')}>Girls</CategoryText>
+              <CategoryText to={createPath('unisex')}>Unisex</CategoryText>
               <CategoryText to={createPath('sale')}>Sale</CategoryText>
             </CategoriesMenu>
           )}

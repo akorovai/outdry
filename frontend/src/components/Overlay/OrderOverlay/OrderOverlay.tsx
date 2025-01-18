@@ -2,37 +2,43 @@ import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { SVG } from '@/components'
 import {
-  OverlayBackdrop,
-  OverlayContainer,
-  OverlayHeader,
   CloseButton,
-  OverlayContent,
-  OverlayContentHeader,
-  OverlayContentHeaderLeft,
-  OverlayContentHeaderLeftText,
   OrderItemCounter,
   OrderItemCountText,
-  ProductList,
-  OrderProductCard,
   OrderItemImage,
   OrderItemTitle,
   OrderItemTitleMainText,
   OrderItemTitleText,
+  OrderProductCard,
+  OverlayBackdrop,
+  OverlayContainer,
+  OverlayContent,
+  OverlayContentHeader,
+  OverlayContentHeaderLeft,
+  OverlayContentHeaderLeftText,
+  OverlayHeader,
+  ProductList,
 } from './OrderOverlay.styled.tsx'
 import { colors } from '../../../consts'
-
-interface Product {
-  id: number
-  imageUrl: string
-  title: string
-  description: string
-}
+import { OrderItemResponse } from '@/models'
+import styled from 'styled-components'
 
 interface OrderOverlayProps {
-  products: Product[]
+  products: OrderItemResponse[]
   onClose: () => void
 }
 
+export const OrderItemDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+`
+
+export const OrderItemDetailText = styled.p`
+  font-size: 14px;
+  color: ${colors.LIGHT_GREY_600};
+`
 const OrderOverlay: React.FC<OrderOverlayProps> = ({ products, onClose }): React.ReactElement => {
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -81,11 +87,17 @@ const OrderOverlay: React.FC<OrderOverlayProps> = ({ products, onClose }): React
           <ProductList as={motion.div} variants={staggerVariants} initial='hidden' animate='visible'>
             {products.map(product => (
               <OrderProductCard key={product.id} as={motion.div} variants={productCardVariants}>
-                <OrderItemImage imageUrl={product.imageUrl} />
+                <OrderItemImage imageUrl={product.imageLink} />
                 <OrderItemTitle>
-                  <OrderItemTitleMainText>{product.title}</OrderItemTitleMainText>
-                  <OrderItemTitleText>{product.description}</OrderItemTitleText>
+                  <OrderItemTitleMainText>{product.productName}</OrderItemTitleMainText>
+                  <OrderItemTitleText>
+                    {product.size}, {product.color}
+                  </OrderItemTitleText>
                 </OrderItemTitle>
+                <OrderItemDetails>
+                  <OrderItemDetailText>Quantity: {product.quantity}</OrderItemDetailText>
+                  <OrderItemDetailText>Price: ${product.price.toFixed(2)}</OrderItemDetailText>
+                </OrderItemDetails>
               </OrderProductCard>
             ))}
           </ProductList>

@@ -22,22 +22,22 @@ import {
   StatusLabel,
   StatusText,
 } from '../Orders/Orders.styled'
-import { IAddressInfo } from '@/models'
+import { IAddressInfo, OrderResponse } from '@/models' // Import OrderResponse
 
 interface OverviewProps {
   setActiveMenuOption: (option: string) => void
   addresses: IAddressInfo[]
+  orders: OrderResponse[] // Add orders prop
+  loading: boolean // Add loading prop
 }
 
-const Overview: FC<OverviewProps> = ({ setActiveMenuOption, addresses }): ReactElement => {
-  const orders = [
-    { id: 1, date: '27.07.2032', items: 3, status: 'In Process' },
-    { id: 2, date: '28.07.2032', items: 5, status: 'Canceled' },
-    { id: 3, date: '29.07.2032', items: 2, status: 'Delivered' },
-  ]
-
-  const firstOrder = orders[0]
+const Overview: FC<OverviewProps> = ({ setActiveMenuOption, addresses, orders, loading }): ReactElement => {
+  const mostRecentOrder = orders.length > 0 ? orders[orders.length - 1] : null
   const firstAddress = addresses[0]
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <OverviewContainer variants={containerVariants} initial='hidden' animate='visible'>
@@ -57,20 +57,22 @@ const Overview: FC<OverviewProps> = ({ setActiveMenuOption, addresses }): ReactE
             You haven't placed any orders yet
           </NoContentText>
         ) : (
-          <OrderItem>
-            <OrderItemLeft>
-              <OrderImage src='https://via.placeholder.com/106' alt='Order' />
-              <LeftOrderInfo>
-                <DateText>{firstOrder.date}</DateText>
-                <NumberOfItemsText>{firstOrder.items} items</NumberOfItemsText>
-              </LeftOrderInfo>
-            </OrderItemLeft>
-            <OrderItemRight>
-              <StatusLabel status={firstOrder.status}>
-                <StatusText status={firstOrder.status}>{firstOrder.status}</StatusText>
-              </StatusLabel>
-            </OrderItemRight>
-          </OrderItem>
+          mostRecentOrder && (
+            <OrderItem>
+              <OrderItemLeft>
+                <OrderImage src='https://via.placeholder.com/106' alt='Order' />
+                <LeftOrderInfo>
+                  <DateText>{new Date(mostRecentOrder.createdAt).toLocaleDateString()}</DateText>
+                  <NumberOfItemsText>{mostRecentOrder.orderItems.length} items</NumberOfItemsText>
+                </LeftOrderInfo>
+              </OrderItemLeft>
+              <OrderItemRight>
+                <StatusLabel status={mostRecentOrder.status}>
+                  <StatusText status={mostRecentOrder.status}>{mostRecentOrder.status}</StatusText>
+                </StatusLabel>
+              </OrderItemRight>
+            </OrderItem>
+          )
         )}
       </div>
       <OrderDivider />

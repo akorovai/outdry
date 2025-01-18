@@ -29,4 +29,5 @@ export interface AuthContextType {
   activateAccount: (emailToken: string) => Promise<void>
   recoverAccount: (email: string) => Promise<void>
   changePassword: (token: string, newPassword: string) => Promise<void>
+  BASE_URL: string
 }

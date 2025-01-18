@@ -17,12 +17,14 @@ import AddressBook from './AddressBook/AddressBook.tsx'
 import LogOut from './LogOut/LogOut.tsx'
 import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
 import useAddresses from './AddressBook/useAddresses'
+import useOrders from './Orders/useOrders.tsx' // Import the useOrders hook
 
 const PersonalCabinet: React.FC = (): React.ReactElement => {
   const { user, token } = useAuth()
   const [selectedOption, setSelectedOption] = useState<string>('Overview')
 
-  const { addresses, loading, error, addAddress, editAddress, deleteAddress } = useAddresses(token)
+  const { addresses, loading: addressesLoading, error, addAddress, editAddress, deleteAddress } = useAddresses(token)
+  const { orders, loading: ordersLoading } = useOrders() // Fetch orders using the useOrders hook
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option)
@@ -31,15 +33,25 @@ const PersonalCabinet: React.FC = (): React.ReactElement => {
   const options = [
     {
       key: 'Overview',
-      component: <Overview setActiveMenuOption={setSelectedOption} addresses={addresses} />,
+      component: (
+        <Overview
+          setActiveMenuOption={setSelectedOption}
+          addresses={addresses}
+          orders={orders}
+          loading={ordersLoading}
+        />
+      ),
     },
-    { key: 'Orders', component: <Orders /> },
+    {
+      key: 'Orders',
+      component: <Orders orders={orders} loading={ordersLoading} />,
+    },
     {
       key: 'Address Book',
       component: (
         <AddressBook
           addresses={addresses}
-          loading={loading}
+          loading={addressesLoading}
           error={error}
           onAddAddress={addAddress}
           onEditAddress={editAddress}

@@ -19,99 +19,18 @@ import {
 } from './Orders.styled'
 import { colors } from '@/consts'
 import { OrderOverlay } from '@/components/Overlay'
+import { OrderResponse } from '@/models'
 
-const orders = [
-  {
-    id: 1,
-    date: '27.07.2032',
-    items: 3,
-    status: 'In Process',
-    products: [
-      {
-        id: 1,
-        imageUrl: '/images/geo-palms-t-shirt.jpg',
-        title: 'Geo Palms - Mens Tie Dye T-Shirt',
-        description: 'Multi/XS',
-      },
-      {
-        id: 2,
-        imageUrl: '/images/classic-denim-jeans.jpg',
-        title: 'Classic Denim Jeans',
-        description: 'Blue/32',
-      },
-      {
-        id: 3,
-        imageUrl: '/images/leather-jacket.jpg',
-        title: 'Leather Jacket',
-        description: 'Black/M',
-      },
-    ],
-  },
-  {
-    id: 2,
-    date: '28.07.2032',
-    items: 5,
-    status: 'Canceled',
-    products: [
-      {
-        id: 4,
-        imageUrl: '/images/running-shoes.jpg',
-        title: 'Running Shoes',
-        description: 'Black/42',
-      },
-      {
-        id: 5,
-        imageUrl: '/images/woolen-sweater.jpg',
-        title: 'Woolen Sweater',
-        description: 'Grey/L',
-      },
-      {
-        id: 6,
-        imageUrl: '/images/baseball-cap.jpg',
-        title: 'Baseball Cap',
-        description: 'Red/One Size',
-      },
-      {
-        id: 7,
-        imageUrl: '/images/canvas-backpack.jpg',
-        title: 'Canvas Backpack',
-        description: 'Green/One Size',
-      },
-      {
-        id: 8,
-        imageUrl: '/images/classic-denim-jeans.jpg',
-        title: 'Classic Denim Jeans',
-        description: 'Blue/32',
-      },
-    ],
-  },
-  {
-    id: 3,
-    date: '29.07.2032',
-    items: 2,
-    status: 'Delivered',
-    products: [
-      {
-        id: 9,
-        imageUrl: '/images/geo-palms-t-shirt.jpg',
-        title: 'Geo Palms - Mens Tie Dye T-Shirt',
-        description: 'Multi/XS',
-      },
-      {
-        id: 10,
-        imageUrl: '/images/leather-jacket.jpg',
-        title: 'Leather Jacket',
-        description: 'Black/M',
-      },
-    ],
-  },
-]
+interface OrdersProps {
+  orders: OrderResponse[] // Receive orders as a prop
+  loading: boolean // Receive loading state as a prop
+}
 
-const Orders: React.FC = (): React.ReactElement => {
+const Orders: React.FC<OrdersProps> = ({ orders, loading }): React.ReactElement => {
   const [isOverlayVisible, setIsOverlayVisible] = useState(false)
-  const [selectedOrder, setSelectedOrder] = useState<(typeof orders)[0] | null>(null)
+  const [selectedOrder, setSelectedOrder] = useState<OrderResponse | null>(null)
 
-  const openOverlay = (order: (typeof orders)[0]) => {
+  const openOverlay = (order: OrderResponse) => {
     setSelectedOrder(order)
     setIsOverlayVisible(true)
   }
@@ -119,6 +38,10 @@ const Orders: React.FC = (): React.ReactElement => {
   const closeOverlay = () => {
     setIsOverlayVisible(false)
     setSelectedOrder(null)
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
   return (
@@ -134,8 +57,8 @@ const Orders: React.FC = (): React.ReactElement => {
                 <OrderItemLeft>
                   <OrderImage src='https://via.placeholder.com/106' alt='Order' />
                   <LeftOrderInfo>
-                    <DateText>{order.date}</DateText>
-                    <NumberOfItemsText>{order.items} items</NumberOfItemsText>
+                    <DateText>{new Date(order.createdAt).toLocaleDateString()}</DateText>
+                    <NumberOfItemsText>{order.orderItems.length} items</NumberOfItemsText>
                   </LeftOrderInfo>
                 </OrderItemLeft>
                 <OrderItemRight>
@@ -162,7 +85,7 @@ const Orders: React.FC = (): React.ReactElement => {
         <Divider />
       </OrderContainerWrapperSecondLayer>
 
-      {isOverlayVisible && selectedOrder && <OrderOverlay products={selectedOrder.products} onClose={closeOverlay} />}
+      {isOverlayVisible && selectedOrder && <OrderOverlay products={selectedOrder.orderItems} onClose={closeOverlay} />}
     </OrderContainerWrapper>
   )
 }

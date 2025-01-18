@@ -15,9 +15,9 @@ interface ErrorResponse {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
-
+const BASE_URL = 'https://outdry-backend.orangeforest-84325f96.polandcentral.azurecontainerapps.io'
 const api = axios.create({
-  baseURL: `https://outdry-backend.orangeforest-84325f96.polandcentral.azurecontainerapps.io/`,
+  baseURL: `${BASE_URL}/`,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -190,13 +190,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, token, login, logout, register, refreshToken, activateAccount, recoverAccount, changePassword }}
+      value={{
+        user,
+        token,
+        login,
+        logout,
+        register,
+        refreshToken,
+        activateAccount,
+        recoverAccount,
+        changePassword,
+        BASE_URL,
+      }}
     >
       {children}
     </AuthContext.Provider>
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext)
   if (context === undefined) {
