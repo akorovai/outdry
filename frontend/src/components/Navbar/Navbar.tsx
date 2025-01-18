@@ -1,119 +1,132 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { BrandLogo, SVG } from '../index.ts';
+import React, { useEffect, useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { BrandLogo, SVG } from '../index.ts'
 import {
-    NavbarContainer,
-    NavbarCategoriesContainer,
-    CategoriesMenu,
-    CategoryText,
-    UserMenu,
-    UsersOptions,
-    SearchInputField,
-    SearchInput,
-    UserOptionLink,
-    SearchIconWrapper,
-    BrandLogoLink,
-} from './Navbar.styled.ts';
-import { colors } from '../../consts';
-import { CartOverlay } from "../Overlay";
+  BrandLogoLink,
+  CategoriesMenu,
+  CategoryText,
+  NavbarCategoriesContainer,
+  NavbarContainer,
+  SearchIconWrapper,
+  SearchInput,
+  SearchInputField,
+  UserMenu,
+  UserOptionLink,
+  UsersOptions,
+} from './Navbar.styled.ts'
+import { colors, routePath } from '@/consts'
+import { CartOverlay } from '../Overlay'
+import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
 
 interface NavbarProps {
-    isMinimal?: boolean;
+  isMinimal?: boolean
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isMinimal = false }): React.ReactElement => {
-    const [searchValue, setSearchValue] = useState('');
-    const [isCartOverlayOpen, setIsCartOverlayOpen] = useState(false);
-    const navigate = useNavigate();
+  const [searchValue, setSearchValue] = useState('')
+  const [isCartOverlayOpen, setIsCartOverlayOpen] = useState(false)
+  const navigate = useNavigate()
+  const { user } = useAuth()
 
-    useEffect(() => {
-        if (isCartOverlayOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'auto';
-        }
+  const isAdmin = useMemo(() => user?.authorities?.includes('ROLE_ADMIN'), [user])
 
-        return () => {
-            document.body.style.overflow = 'auto';
-        };
-    }, [isCartOverlayOpen]);
+  useEffect(() => {
+    if (isCartOverlayOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
 
-    const handleClearSearch = () => {
-        setSearchValue('');
-    };
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [isCartOverlayOpen])
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            console.log('Search for:', searchValue);
-        }
-    };
+  const handleClearSearch = () => {
+    setSearchValue('')
+  }
 
-    const handleLogoClick = () => {
-        navigate('/');
-    };
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      console.log('Search for:', searchValue)
+    }
+  }
 
-    const toggleCartOverlay = () => {
-        setIsCartOverlayOpen((prev) => !prev);
-    };
+  const handleLogoClick = () => {
+    navigate('/')
+  }
 
-    return (
-        <>
-            <NavbarContainer>
-                <NavbarCategoriesContainer>
-                    <BrandLogoLink to="/" onClick={handleLogoClick}>
-                        <BrandLogo />
-                    </BrandLogoLink>
-                    {!isMinimal && (
-                        <CategoriesMenu>
-                            <CategoryText to="/products/new-in">New in</CategoryText>
-                            <CategoryText to="/products/men">Men</CategoryText>
-                            <CategoryText to="/products/women">Women</CategoryText>
-                            <CategoryText to="/products/kids">Kids</CategoryText>
-                            <CategoryText to="/products/accessories">Accessories</CategoryText>
-                            <CategoryText to="/products/sale">Sale</CategoryText>
-                        </CategoriesMenu>
-                    )}
-                </NavbarCategoriesContainer>
+  const toggleCartOverlay = () => {
+    setIsCartOverlayOpen(prev => !prev)
+  }
 
-                <UserMenu>
-                    {!isMinimal ? (
-                        <>
-                            <SearchInputField>
-                                <SearchInput
-                                    type="search"
-                                    placeholder="Search"
-                                    aria-label="Search"
-                                    value={searchValue}
-                                    onChange={(e) => setSearchValue(e.target.value)}
-                                    onKeyDown={handleKeyDown}
-                                />
-                                <SearchIconWrapper onClick={handleClearSearch}>
-                                    {searchValue ? <SVG.Cross color={colors.BLACK} /> : <SVG.Search color={colors.BLACK} />}
-                                </SearchIconWrapper>
-                            </SearchInputField>
-                            <UsersOptions>
-                                <UserOptionLink to="/wishlist">
-                                    <SVG.Like color={colors.WHITE} />
-                                </UserOptionLink>
-                                <UserOptionLink to="/profile">
-                                    <SVG.User color={colors.WHITE} />
-                                </UserOptionLink>
-                                <UserOptionLink to="#" onClick={toggleCartOverlay}>
-                                    <SVG.Bucket color={colors.WHITE} />
-                                </UserOptionLink>
-                            </UsersOptions>
-                        </>
-                    ) : (
-                        <UserOptionLink to="#" onClick={toggleCartOverlay}>
-                            <SVG.Bucket color={colors.WHITE} />
-                        </UserOptionLink>
-                    )}
-                </UserMenu>
-            </NavbarContainer>
+  const createPath = (value: string) => {
+    return routePath.PRODUCTS.replace(':category', value)
+  }
 
-            {isCartOverlayOpen && <CartOverlay onClose={toggleCartOverlay} />}
-        </>
-    );
-};
+  return (
+    <>
+      <NavbarContainer>
+        <NavbarCategoriesContainer>
+          <BrandLogoLink to='/' onClick={handleLogoClick}>
+            <BrandLogo />
+          </BrandLogoLink>
+          {!isMinimal && (
+            <CategoriesMenu>
+              <CategoryText to={createPath('new-in')}>New in</CategoryText>
+              <CategoryText to={createPath('men')}>Men</CategoryText>
+              <CategoryText to={createPath('women')}>Women</CategoryText>
+              <CategoryText to={createPath('kids')}>Kids</CategoryText>
+              <CategoryText to={createPath('accessories')}>Accessories</CategoryText>
+              <CategoryText to={createPath('sale')}>Sale</CategoryText>
+            </CategoriesMenu>
+          )}
+        </NavbarCategoriesContainer>
 
-export default Navbar;
+        <UserMenu>
+          {!isMinimal ? (
+            <>
+              <SearchInputField>
+                <SearchInput
+                  type='search'
+                  placeholder='Search'
+                  aria-label='Search'
+                  value={searchValue}
+                  onChange={e => setSearchValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+                <SearchIconWrapper onClick={handleClearSearch}>
+                  {searchValue ? <SVG.Cross color={colors.BLACK} /> : <SVG.Search color={colors.BLACK} />}
+                </SearchIconWrapper>
+              </SearchInputField>
+              <UsersOptions>
+                <UserOptionLink to={routePath.WISHLIST}>
+                  <SVG.Like color={colors.WHITE} />
+                </UserOptionLink>
+                <UserOptionLink to={routePath.PROFILE}>
+                  <SVG.User color={colors.WHITE} />
+                </UserOptionLink>
+                <UserOptionLink to='#' onClick={toggleCartOverlay}>
+                  <SVG.Bucket color={colors.WHITE} />
+                </UserOptionLink>
+                {isAdmin && (
+                  <UserOptionLink to={routePath.WAREHOUSE}>
+                    <SVG.Warehouse color={colors.WHITE} />
+                  </UserOptionLink>
+                )}
+              </UsersOptions>
+            </>
+          ) : (
+            <UserOptionLink to='#' onClick={toggleCartOverlay}>
+              <SVG.Bucket color={colors.WHITE} />
+            </UserOptionLink>
+          )}
+        </UserMenu>
+      </NavbarContainer>
+
+      {isCartOverlayOpen && <CartOverlay onClose={toggleCartOverlay} />}
+    </>
+  )
+}
+
+export default Navbar

@@ -24,6 +24,17 @@ import { colors } from '@/consts'
 import { useNavigate } from 'react-router-dom'
 import routePath from '../../consts/routePath.ts'
 
+import { validateCity, validatePhone, validateRequired, validateState, validateZipCode } from './validators.ts'
+
+interface Product {
+  id: string
+  name: string
+  price: number
+  quantity: number
+  image: string
+  variant?: string
+}
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.5 } },
@@ -49,9 +60,28 @@ const CheckoutContainer: FC = (): ReactElement => {
   const [state, setState] = useState('')
   const [phone, setPhone] = useState('')
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard Shipping')
-  const [currentStep, setCurrentStep] = useState(1) // Текущий шаг (1, 2 или 3)
-  const [deliveryTime, setDeliveryTime] = useState('3-5 business days') // Default delivery time
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('Visa') // Default payment method
+  const [currentStep, setCurrentStep] = useState(1)
+  const [deliveryTime, setDeliveryTime] = useState('3-5 business days')
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('Visa')
+
+  // Состояние для списка товаров
+  const [products, setProducts] = useState<Product[]>([
+    {
+      id: '1',
+      name: 'Geo Palms - Mens Recycled Zip Hoodie - Grey',
+      price: 45.0,
+      quantity: 1,
+      image: 'path/to/image',
+      variant: 'Grey/XS',
+    },
+  ])
+
+  const subtotal = products.reduce((total, product) => total + product.price * product.quantity, 0)
+
+  const shippingCost =
+    selectedShippingMethod === 'Standard Shipping' ? 0 : selectedShippingMethod === 'Expedited Shipping' ? 12.99 : 24.99
+
+  const total = subtotal + shippingCost
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)
   const handleFullNameChange = (e: ChangeEvent<HTMLInputElement>) => setFullName(e.target.value)
@@ -89,12 +119,12 @@ const CheckoutContainer: FC = (): ReactElement => {
 
   const isStepTwoComplete = () => {
     return (
-      fullName.trim() !== '' &&
-      address.trim() !== '' &&
-      city.trim() !== '' &&
-      zipCode.trim() !== '' &&
-      state.trim() !== '' &&
-      phone.trim() !== '' &&
+      validateRequired(fullName) !== '' &&
+      validateRequired(address) !== '' &&
+      validateCity(city) !== '' &&
+      validateZipCode(zipCode) !== '' &&
+      validateState(state) !== '' &&
+      validatePhone(phone) !== '' &&
       selectedShippingMethod.trim() !== ''
     )
   }
@@ -105,10 +135,9 @@ const CheckoutContainer: FC = (): ReactElement => {
     }
   }
 
-  // Переход к шагу 3
   const handleContinueToStepThree = () => {
     if (isStepTwoComplete()) {
-      setCurrentStep(3) // Переходим к шагу 3
+      setCurrentStep(3)
     }
   }
 
@@ -186,8 +215,8 @@ const CheckoutContainer: FC = (): ReactElement => {
       {currentStep !== 4 && (
         <RightContainer>
           <RightContainerContent>
-            <ProductList />
-            <Subtotal />
+            <ProductList products={products} />
+            <Subtotal total={total} shippingCost={shippingCost} />
             <HassleFreeReturns />
           </RightContainerContent>
         </RightContainer>

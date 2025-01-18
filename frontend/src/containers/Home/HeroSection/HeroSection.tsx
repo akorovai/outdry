@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 import {
   AlmostContainer,
@@ -10,10 +10,14 @@ import {
   PromotionText,
   SectionContainer,
   TextWrapper,
-} from "./HeroSection.styled.ts";
-import { MainButton, SVG } from "../../../components";
+} from './HeroSection.styled.ts'
+import { MainButton, SVG } from '../../../components'
+import { useNavigate } from 'react-router-dom'
+import routePath from '../../../consts/routePath.ts'
 
 const HeroSection: React.FC = (): React.ReactElement => {
+  const navigate = useNavigate()
+  const handleStartShoppingButton = () => navigate(routePath.PRODUCTS.replace(':category', 'new-in'))
   return (
     <SectionContainer initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
       <ContentWrapper
@@ -25,7 +29,7 @@ const HeroSection: React.FC = (): React.ReactElement => {
           <DiscountContainer
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 1 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 1 }}
           >
             <DiscountPercentage>20</DiscountPercentage>
             <DiscountText>% Off</DiscountText>
@@ -38,18 +42,20 @@ const HeroSection: React.FC = (): React.ReactElement => {
             Everything
           </PromotionText>
           <AlmostContainer
-            initial={{ scale: 0, x: "-50%", y: "-50%", rotate: -7 }}
-            animate={{ scale: 1, x: "-50%", y: "-50%", rotate: -7 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 2 }}
+            initial={{ scale: 0, x: '-50%', y: '-50%', rotate: -7 }}
+            animate={{ scale: 1, x: '-50%', y: '-50%', rotate: -7 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 2 }}
           >
             <AlmostText>Almost</AlmostText>
           </AlmostContainer>
-          <SVG.Vector color="white" />
+          <SVG.Vector color='white' />
         </TextWrapper>
-        <MainButton width={50}>Start Shopping</MainButton>
+        <MainButton width={50} onClick={handleStartShoppingButton}>
+          Start Shopping
+        </MainButton>
       </ContentWrapper>
     </SectionContainer>
-  );
-};
+  )
+}
 
-export default HeroSection;
+export default HeroSection

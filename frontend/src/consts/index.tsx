@@ -1,8 +1,6 @@
+import colors from './color.ts'
+import fonts from './fonts.tsx'
+import storage from './storage.ts'
+import routePath from './routePath.ts'
 
-import colors from "./color.ts";
-import fonts from "./fonts.tsx";
-
-export {
-    colors,
-    fonts
-}
+export { colors, fonts, storage, routePath }

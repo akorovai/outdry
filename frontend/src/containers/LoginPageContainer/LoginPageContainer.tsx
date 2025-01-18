@@ -1,150 +1,30 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import styled from 'styled-components'
-import { colors, fonts } from '@/consts'
+import { useNavigate } from 'react-router-dom'
 import { MainButton } from '@/components'
 import routePath from '@/consts/routePath'
-
-const OuterContainer = styled(motion.div)`
-  display: flex;
-  height: 90vh;
-  width: 100%;
-`
-
-const LeftContainer = styled(motion.div)`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: ${colors.LIGHT_GREEN_500};
-`
-
-const LeftContainerContent = styled(motion.div)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 3.125rem;
-`
-
-const RightContainer = styled(motion.div)`
-  flex: 1;
-  background-color: ${colors.WHITE};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-const LeftContainerTitle = styled(motion.p)`
-  color: ${colors.WHITE};
-  text-align: center;
-  width: 18.75rem;
-  font-family: ${fonts.POPPINS};
-  font-size: 3rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 3.75rem; /* 125% */
-  letter-spacing: -0.06rem;
-  align-self: stretch;
-`
-
-const RightContainerTitle = styled(motion.p)`
-  color: ${colors.BLACK};
-  text-align: center;
-  font-family: ${fonts.POPPINS};
-  font-size: 3rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 3.75rem; /* 125% */
-  letter-spacing: -0.06rem;
-  align-self: stretch;
-`
-
-const RightContainerContent = styled(motion.div)`
-  display: flex;
-  width: 20rem;
-  flex-direction: column;
-  align-items: center;
-  gap: 3.125rem;
-`
-
-const FormContainer = styled(motion.div)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  align-self: stretch;
-`
-
-const InputsAndButtonContainer = styled(motion.div)`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.5rem;
-  align-self: stretch;
-`
-
-const ForgetYourPasswordLink = styled(Link)`
-  color: ${colors.LIGHT_GREEN_400};
-  text-align: center;
-  font-family: ${fonts.POPPINS};
-  font-size: 0.875rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 140%; /* 1.225rem */
-  align-self: stretch;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`
-
-const InputsContainer = styled(motion.div)`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.75rem;
-  align-self: stretch;
-`
-
-const InputContainer = styled(motion.div)`
-  display: flex;
-  padding: 0.625rem 0.875rem;
-  align-items: center;
-  gap: 0.5rem;
-  align-self: stretch;
-  border: 1px solid ${colors.LIGHT_GREY_300};
-  background: ${colors.WHITE};
-  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-  border-radius: 0.5rem;
-`
-
-const CustomInput = styled(motion.input)`
-  width: 100%;
-  border: none;
-  outline: none;
-  font-family: ${fonts.POPPINS};
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1.5rem;
-  color: ${colors.BLACK};
-
-  &::placeholder {
-    color: ${colors.LIGHT_GREY_400};
-  }
-
-  &:focus {
-    border-color: ${colors.LIGHT_GREEN_400};
-  }
-`
+import {
+  CustomInput,
+  ForgetYourPasswordLink,
+  InputContainer,
+  InputsAndButtonContainer,
+  InputsContainer,
+  LeftContainer,
+  LeftContainerContent,
+  LeftContainerTitle,
+  OuterContainer,
+  RightContainer,
+  RightContainerContent,
+  RightContainerTitle,
+} from './LoginPageContainer.styled'
+import { colors } from '../../consts'
+import { useAuth } from '../../context/AuthContext/AuthContext.tsx'
 
 const LoginPageContainer: React.FC = (): React.ReactElement => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+  const { login } = useAuth()
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
@@ -156,6 +36,18 @@ const LoginPageContainer: React.FC = (): React.ReactElement => {
 
   const handleRegisterClick = () => {
     navigate(routePath.REGISTRATION)
+  }
+
+  const handleLogin = async () => {
+    setError(null)
+
+    try {
+      await login({ email, password })
+      navigate('/')
+    } catch (err) {
+      setError('Invalid email or password. Please try again.')
+      console.error('Login error:', err)
+    }
   }
 
   const containerVariants = {
@@ -199,34 +91,35 @@ const LoginPageContainer: React.FC = (): React.ReactElement => {
       <RightContainer variants={rightContainerVariants} initial='hidden' animate='visible'>
         <RightContainerContent>
           <RightContainerTitle>Sign in</RightContainerTitle>
-          <FormContainer>
-            <InputsAndButtonContainer>
-              <InputsContainer>
-                <InputContainer variants={inputVariants} initial='hidden' animate='visible'>
-                  <CustomInput type='email' placeholder='Email' value={email} onChange={handleEmailChange} />
-                </InputContainer>
-                <InputContainer variants={inputVariants} initial='hidden' animate='visible'>
-                  <CustomInput
-                    type='password'
-                    placeholder='Password'
-                    value={password}
-                    onChange={handlePasswordChange}
-                  />
-                </InputContainer>
-              </InputsContainer>
-              <MainButton
-                backgroundColor={colors.BLACK}
-                textColor={colors.WHITE}
-                hoverEffect={{
-                  backgroundColor: colors.LIGHT_GREY_600,
-                  textColor: colors.WHITE,
-                }}
-              >
-                Sign In
-              </MainButton>
-            </InputsAndButtonContainer>
+          <InputsAndButtonContainer>
+            <InputsContainer>
+              <InputContainer variants={inputVariants} initial='hidden' animate='visible'>
+                <CustomInput type='email' placeholder='Email' value={email} onChange={handleEmailChange} required />
+              </InputContainer>
+              <InputContainer variants={inputVariants} initial='hidden' animate='visible'>
+                <CustomInput
+                  type='password'
+                  placeholder='Password'
+                  value={password}
+                  onChange={handlePasswordChange}
+                  required
+                />
+              </InputContainer>
+            </InputsContainer>
+            {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+            <MainButton
+              backgroundColor={colors.BLACK}
+              textColor={colors.WHITE}
+              hoverEffect={{
+                backgroundColor: colors.LIGHT_GREY_600,
+                textColor: colors.WHITE,
+              }}
+              onClick={handleLogin}
+            >
+              Sign In
+            </MainButton>
             <ForgetYourPasswordLink to={routePath.FORGET_PASSWORD}>Forgot your password?</ForgetYourPasswordLink>
-          </FormContainer>
+          </InputsAndButtonContainer>
         </RightContainerContent>
       </RightContainer>
     </OuterContainer>

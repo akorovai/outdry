@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react'
+import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
+import { useNavigate } from 'react-router-dom'
 
-const LogOut:React.FC = ():React.ReactElement => {
- return (
-  <div>
+const LogOut: React.FC = (): React.ReactElement => {
+  const { logout } = useAuth()
+  const navigate = useNavigate()
 
-  </div>
- );
-};
+  useEffect(() => {
+    logout().then(() => {
+      navigate('/login')
+    })
+  }, [logout, navigate])
 
-export default LogOut;
+  return (
+    <div>
+      <p>Logging out...</p>
+    </div>
+  )
+}
+
+export default LogOut

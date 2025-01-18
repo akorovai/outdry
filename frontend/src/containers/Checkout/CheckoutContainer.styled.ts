@@ -35,7 +35,7 @@ export const RightContainer = styled(motion.div)`
   padding: 3.125rem 14.6875rem 20.875rem 2.25rem;
   align-items: center;
   background: ${colors.LIGHT_GREY_300};
-  height: 100%;
+  height: 100vh;
 `
 
 export const RightContainerContent = styled(motion.div)`

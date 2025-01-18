@@ -6,8 +6,8 @@ export const validateEmail = (value: string): string | null => {
 }
 
 export const validatePhone = (value: string): string | null => {
-  if (!/^\d{10}$/.test(value)) {
-    return 'Please enter a valid 10-digit phone number.'
+  if (!/^\d{}$/.test(value)) {
+    return 'Please enter a valid 9-digit phone number.'
   }
   return null
 }

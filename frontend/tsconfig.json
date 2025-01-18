@@ -5,7 +5,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "types": ["@testing-library/jest-dom", "vitest/globals", "vite-plugin-svgr/client"],
+    "types": ["@testing-library/jest-dom", "vitest/globals", "vite-plugin-svgr/client", "node"],
     "baseUrl": "./src",
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -19,15 +19,16 @@
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     // These are already covered by eslint as warnings, which makes it easier to test temporary code
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
+     "noUnusedLocals": true,
+     "noUnusedParameters": true,
     "paths": {
       "@/*": ["./*"],
       "@assets/*": ["./assets/*"],
       "@components/*": ["./components/*"],
       "@consts/*": ["./consts/*"],
       "@containers/*": ["./containers/*"],
-      "@pages/*": ["./pages/*"]
+      "@pages/*": ["./pages/*"],
+      "@context/*": ["./context/*"]
     }
   },
   // https://www.npmjs.com/package/@testing-library/jest-dom?activeTab=readme#with-typescript

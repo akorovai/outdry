@@ -15,27 +15,42 @@ import {
   PriceText,
 } from './CheckoutContainer.styled'
 
-export const ProductList: FC = () => {
+interface Product {
+  id: string
+  name: string
+  price: number
+  quantity: number
+  image: string
+  variant?: string
+}
+
+interface ProductListProps {
+  products: Product[]
+}
+
+export const ProductList: FC<ProductListProps> = ({ products }) => {
   return (
     <ProductsContainer>
       <ProductItemsList>
-        <ProductItem>
-          <ProductItemLeft>
-            <ProductImageContainer>
-              <ProductImage />
-            </ProductImageContainer>
-            <ProductInfoContainer>
-              <ProductInfoTitle>Geo Palms - Mens Recycled Zip Hoodie - Grey</ProductInfoTitle>
-              <ProductInfoText>Grey/XS</ProductInfoText>
-            </ProductInfoContainer>
-          </ProductItemLeft>
-          <ProductItemRight>
-            <AmountBox>
-              <AmountText>1</AmountText>
-            </AmountBox>
-            <PriceText>$45.00</PriceText>
-          </ProductItemRight>
-        </ProductItem>
+        {products.map(product => (
+          <ProductItem key={product.id}>
+            <ProductItemLeft>
+              <ProductImageContainer>
+                <ProductImage src={product.image} alt={product.name} />
+              </ProductImageContainer>
+              <ProductInfoContainer>
+                <ProductInfoTitle>{product.name}</ProductInfoTitle>
+                {product.variant && <ProductInfoText>{product.variant}</ProductInfoText>}
+              </ProductInfoContainer>
+            </ProductItemLeft>
+            <ProductItemRight>
+              <AmountBox>
+                <AmountText>{product.quantity}</AmountText>
+              </AmountBox>
+              <PriceText>${(product.price * product.quantity).toFixed(2)}</PriceText>
+            </ProductItemRight>
+          </ProductItem>
+        ))}
       </ProductItemsList>
     </ProductsContainer>
   )

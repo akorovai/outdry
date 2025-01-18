@@ -4,12 +4,13 @@ import PersonalCabinetContainer from './PersonalCabinet/PersonalCabinetContainer
 import CustomerReviews from './CustomerReviews/CustomerReviews.tsx'
 
 import LoginPageContainer from './LoginPageContainer/LoginPageContainer.tsx'
-import RegisterPageContainer from './RegisterPageContainer/RegisterPageContainer.tsx'
-import ForgetPasswordContainer from './ForgetPasswordContainer/ForgetPasswordContainer.tsx'
+import RegisterPageContainer from './RegisterPage/RegisterPageContainer.tsx'
+import ForgetPasswordContainer from './ForgetPassword/ForgetPasswordContainer.tsx'
 
 import TermsAndConditions from './TermsAndConditions/TermsAndConditions.tsx'
 
 import CheckoutContainer from './Checkout/CheckoutContainer.tsx'
+import WarehouseContainer from './Warehouse/WarehouseContainer.tsx'
 
 export {
   HeroSection,
@@ -21,4 +22,5 @@ export {
   ForgetPasswordContainer,
   TermsAndConditions,
   CheckoutContainer,
+  WarehouseContainer,
 }

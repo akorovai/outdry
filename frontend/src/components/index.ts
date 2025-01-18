@@ -22,6 +22,9 @@ import ContentContainer from './ContentContainer/ContentContainer.tsx'
 import FormContainer from './FormContainer/FormContainer.tsx'
 
 import CheckoutInput from './Input/CheckoutInput/CheckoutInput.tsx'
+
+import FunctionButton from './Button/FunctionButton.tsx'
+
 export {
   SVG,
   Footer,
@@ -41,4 +44,5 @@ export {
   ContentContainer,
   FormContainer,
   CheckoutInput,
+  FunctionButton,
 }

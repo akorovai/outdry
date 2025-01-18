@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { motion } from 'framer-motion' // Import motion from framer-motion
+import { motion } from 'framer-motion'
 import { SVG } from '@/components'
 import {
   OverlayBackdrop,
@@ -41,7 +41,6 @@ const OrderOverlay: React.FC<OrderOverlayProps> = ({ products, onClose }): React
     }
   }, [])
 
-  // Animation variants for internal elements
   const headerVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },

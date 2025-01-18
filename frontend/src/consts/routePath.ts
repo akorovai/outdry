@@ -9,6 +9,7 @@ enum routePath {
   FORGET_PASSWORD = '/forgot-password',
   TERMS_AND_CONDITIONS = '/terms-and-conditions',
   CHECKOUT = '/checkout',
+  WAREHOUSE = '/warehouse',
 }
 
 export default routePath

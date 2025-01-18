@@ -21,6 +21,7 @@ enum Colors {
   LIGHT_GREY_300 = '#D0D5DD',
   LIGHT_GREY_400 = '#98A2B3',
   LIGHT_GREY_600 = '#4A5568',
+  LIGHT_GREY_700 = '#344054',
   // Reds
   ERROR = '#D92D20',
   ERROR_100 = '#FEE4E2',

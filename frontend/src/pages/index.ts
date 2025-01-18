@@ -8,6 +8,7 @@ import RegisterPage from './RegisterPage/RegisterPage.tsx'
 import ForgetPasswordPage from './ForgetPasswordPage/ForgetPasswordPage.tsx'
 import TermsAndConditionsPage from './TermsAndConditionsPage/TermsAndConditionsPage.tsx'
 import CheckoutPage from './CheckoutPage/CheckoutPage.tsx'
+import WarehousePage from './WarehousePage/WarehousePage.tsx'
 export {
   HomePage,
   ProductsPage,
@@ -19,4 +20,5 @@ export {
   ForgetPasswordPage,
   TermsAndConditionsPage,
   CheckoutPage,
+  WarehousePage,
 }
