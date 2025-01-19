@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { IAddressInfo } from '@/models'
-import { useAuth } from '../../../context/AuthContext/AuthContext.tsx'
+import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
 
 const useAddresses = (token: string | null) => {
   const [addresses, setAddresses] = useState<IAddressInfo[]>([])
@@ -30,7 +30,6 @@ const useAddresses = (token: string | null) => {
 
   const addAddress = async (address: IAddressInfo) => {
     try {
-      // Create a new object without the `id` field
       const addressWithoutId = {
         fullName: address.fullName,
         state: address.state,
@@ -39,10 +38,9 @@ const useAddresses = (token: string | null) => {
         postalCode: address.postalCode,
         city: address.city,
         phone: address.phone,
-        userId: parseInt(user?.userId || '0', 10), // Ensure userId is set
+        userId: parseInt(user?.userId || '0', 10),
       }
 
-      // Send the address without the `id` field to the backend
       const response = await axios.post(`${API_BASE_URL}/api/addresses`, addressWithoutId, {
         headers: {
           Authorization: `Bearer ${token}`,

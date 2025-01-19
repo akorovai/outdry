@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import axios from 'axios'
-import { useAuth } from '@/context/AuthContext/AuthContext'
+import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
 
 const useWishlist = (productId: string) => {
   const { token, BASE_URL } = useAuth()
@@ -8,8 +8,9 @@ const useWishlist = (productId: string) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Проверка, находится ли товар в wishlist
   const checkWishlistStatus = useCallback(async () => {
+    if (!token || !productId || isLoading) return
+
     setIsLoading(true)
     setError(null)
 
@@ -21,7 +22,7 @@ const useWishlist = (productId: string) => {
       })
 
       if (response.status >= 200 && response.status < 300) {
-        setIsInWishlist(response.data.isInWishlist) // Предполагаем, что бэкенд возвращает { isInWishlist: boolean }
+        setIsInWishlist(response.data.isInWishlist)
       } else {
         throw new Error('Failed to check wishlist status')
       }
@@ -30,10 +31,11 @@ const useWishlist = (productId: string) => {
     } finally {
       setIsLoading(false)
     }
-  }, [token, BASE_URL, productId])
+  }, [token, BASE_URL, productId, isLoading])
 
-  // Добавление товара в wishlist
   const addToWishlist = useCallback(async () => {
+    if (!token || !productId || isLoading) return
+
     setIsLoading(true)
     setError(null)
 
@@ -58,10 +60,11 @@ const useWishlist = (productId: string) => {
     } finally {
       setIsLoading(false)
     }
-  }, [token, BASE_URL, productId])
+  }, [token, BASE_URL, productId, isLoading])
 
-  // Удаление товара из wishlist
   const removeFromWishlist = useCallback(async () => {
+    if (!token || !productId || isLoading) return
+
     setIsLoading(true)
     setError(null)
 
@@ -82,11 +85,13 @@ const useWishlist = (productId: string) => {
     } finally {
       setIsLoading(false)
     }
-  }, [token, BASE_URL, productId])
+  }, [token, BASE_URL, productId, isLoading])
 
   useEffect(() => {
-    checkWishlistStatus()
-  }, [checkWishlistStatus])
+    if (token && productId) {
+      checkWishlistStatus()
+    }
+  }, [token, productId]) // Убрали checkWishlistStatus из зависимостей
 
   return {
     isInWishlist,

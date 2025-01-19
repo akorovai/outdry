@@ -3,6 +3,7 @@ import { Footer, Navbar } from '@/components'
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
 import { ForgetPasswordContainer } from '@/containers'
+
 export const PageContainer = styled(motion.div)`
   display: flex;
   width: 100%;

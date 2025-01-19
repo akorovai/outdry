@@ -11,6 +11,7 @@ interface IProductListProps {
   totalPages: number
   onPreviousClick: () => void
   onNextClick: () => void
+  onDeleteItem: (productId: number) => void
 }
 
 const ProductsList: FC<IProductListProps> = ({
@@ -20,6 +21,7 @@ const ProductsList: FC<IProductListProps> = ({
   totalPages,
   onPreviousClick,
   onNextClick,
+  onDeleteItem,
 }): ReactElement => {
   return (
     <SectionContainer>
@@ -37,6 +39,7 @@ const ProductsList: FC<IProductListProps> = ({
             color={product.color.name}
             discountPercent={product.discount}
             category={product.gender.toLowerCase()}
+            onTrashClick={() => onDeleteItem(product.id)} // Передайте функцию удаления
           />
         ))}
       </ProductsSection>

@@ -1,6 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import axios from 'axios'
-import { useAuth } from '../../../../context/AuthContext/AuthContext.tsx'
+import { useCallback, useEffect, useState } from 'react'
+import { api } from '@/context/AuthContext/AuthContext.tsx'
 
 interface ResponseRecord<T> {
   code: number
@@ -34,21 +33,13 @@ const useShoppingCart = () => {
   const [cartItems, setCartItems] = useState<ShoppingCartItemResponse[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const { token, BASE_URL } = useAuth()
 
   const fetchShoppingCartItems = useCallback(async () => {
     setLoading(true)
     setError(null)
 
     try {
-      const response = await axios.get<ResponseRecord<ShoppingCartItemResponse[]>>(
-        `${BASE_URL}/api/shopping-cart/items`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
+      const response = await api.get<ResponseRecord<ShoppingCartItemResponse[]>>('/api/shopping-cart/items')
 
       if (response.status === 200 && Array.isArray(response.data.message)) {
         setCartItems(response.data.message)
@@ -64,7 +55,7 @@ const useShoppingCart = () => {
     } finally {
       setLoading(false)
     }
-  }, [BASE_URL, token])
+  }, []) // Убрали зависимости, так как api уже настроен
 
   const deleteShoppingCartItem = useCallback(
     async (itemId: number): Promise<CartOperationResult> => {
@@ -76,11 +67,7 @@ const useShoppingCart = () => {
       setError(null)
 
       try {
-        const response = await axios.delete<ResponseRecord<string>>(`${BASE_URL}/api/shopping-cart/items/${itemId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        const response = await api.delete<ResponseRecord<string>>(`/api/shopping-cart/items/${itemId}`)
 
         if (response.status === 204) {
           setCartItems(prevItems => prevItems.filter(item => item.id !== itemId))
@@ -96,7 +83,7 @@ const useShoppingCart = () => {
         setLoading(false)
       }
     },
-    [BASE_URL, token, loading],
+    [loading], // Только loading, так как api уже настроен
   )
 
   const updateShoppingCartItemQuantity = useCallback(
@@ -109,29 +96,37 @@ const useShoppingCart = () => {
       setError(null)
 
       try {
+        // Оптимистичное обновление локального состояния
         setCartItems(prevItems =>
-          prevItems.map(item => (item.id === itemId ? { ...item, quantity: newQuantity } : item)),
+          prevItems.map(item =>
+            item.id === itemId
+              ? {
+                  ...item,
+                  quantity: newQuantity,
+                }
+              : item,
+          ),
         )
 
-        const response = await axios.patch<ResponseRecord<string>>(
-          `${BASE_URL}/api/shopping-cart/items/${itemId}/quantity`,
-          null,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            params: {
-              newQuantity,
-            },
+        const response = await api.patch<ResponseRecord<string>>(`/api/shopping-cart/items/${itemId}/quantity`, null, {
+          params: {
+            newQuantity,
           },
-        )
+        })
 
         if (response.status === 204) {
           return { success: true, message: 'Quantity updated successfully' }
         } else {
-          // Revert local state if the API call fails
+          // Откат локального состояния, если запрос не удался
           setCartItems(prevItems =>
-            prevItems.map(item => (item.id === itemId ? { ...item, quantity: item.quantity } : item)),
+            prevItems.map(item =>
+              item.id === itemId
+                ? {
+                    ...item,
+                    quantity: item.quantity,
+                  }
+                : item,
+            ),
           )
           throw new Error('Failed to update shopping cart item quantity')
         }
@@ -143,7 +138,7 @@ const useShoppingCart = () => {
         setLoading(false)
       }
     },
-    [BASE_URL, token, loading],
+    [loading], // Только loading, так как api уже настроен
   )
 
   useEffect(() => {

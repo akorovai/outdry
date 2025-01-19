@@ -5,22 +5,22 @@ import {
   AICContent,
   DropImageHereContainer,
   DropImageHereText,
-  OrSection,
-  OrLine,
-  OrTest,
-  ScrollableContainer,
-  UploadedImagesContainer,
-  ImageWrapper,
+  fadeInOut,
+  imageAnimation,
   ImagePreview,
+  ImageUploaderContainer,
+  ImageWrapper,
+  OrLine,
+  OrSection,
+  OrTest,
+  removeButtonAnimation,
   RemoveImageButton,
   RemoveImageIcon,
-  imageAnimation,
-  removeButtonAnimation,
-  fadeInOut,
+  ScrollableContainer,
+  UploadedImagesContainer,
 } from './AddProductOverlay.styled.ts'
-
 import { MainButton } from '../../index.ts'
-import { colors } from '../../../consts'
+import { colors } from '@/consts'
 
 interface ImageUploaderProps {
   uploadedImages: File[]
@@ -31,7 +31,9 @@ interface ImageUploaderProps {
   onRemoveImage: (index: number) => void
   isDragging: boolean
 }
+
 const MAX_IMAGES = 3
+
 export const ImageUploader: React.FC<ImageUploaderProps> = ({
   uploadedImages,
   onFileInputChange,
@@ -42,41 +44,43 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   isDragging,
 }) => {
   return (
-    <AddImageContainer
-      {...fadeInOut}
-      transition={{ delay: 0.3, duration: 0.3 }}
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
-      onDrop={onDrop}
-      style={{ border: isDragging ? `2px dashed ${colors.LIGHT_GREEN_500}` : 'none' }}
-    >
-      <AICContent>
-        <DropImageHereContainer>
-          <DropImageHereText>Drag image here</DropImageHereText>
-          <OrSection>
-            <OrLine />
-            <OrTest>or</OrTest>
-            <OrLine />
-          </OrSection>
-        </DropImageHereContainer>
-        <input
-          type='file'
-          id='file-upload'
-          style={{ display: 'none' }}
-          multiple
-          onChange={onFileInputChange}
-          disabled={uploadedImages.length >= MAX_IMAGES}
-        />
-        <MainButton
-          backgroundColor={colors.WHITE}
-          textColor={colors.BLACK}
-          hoverEffect={{ backgroundColor: colors.LIGHT_GREY_200, textColor: colors.BLACK }}
-          onClick={() => document.getElementById('file-upload')?.click()}
-          disabled={uploadedImages.length >= MAX_IMAGES}
-        >
-          Upload Image
-        </MainButton>
-      </AICContent>
+    <ImageUploaderContainer>
+      <AddImageContainer
+        {...fadeInOut}
+        transition={{ delay: 0.3, duration: 0.3 }}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+        style={{ border: isDragging ? `2px dashed ${colors.LIGHT_GREEN_500}` : 'none' }}
+      >
+        <AICContent>
+          <DropImageHereContainer>
+            <DropImageHereText>Drag image here</DropImageHereText>
+            <OrSection>
+              <OrLine />
+              <OrTest>or</OrTest>
+              <OrLine />
+            </OrSection>
+          </DropImageHereContainer>
+          <input
+            type='file'
+            id='file-upload'
+            style={{ display: 'none' }}
+            multiple
+            onChange={onFileInputChange}
+            disabled={uploadedImages.length >= MAX_IMAGES}
+          />
+          <MainButton
+            backgroundColor={colors.WHITE}
+            textColor={colors.BLACK}
+            hoverEffect={{ backgroundColor: colors.LIGHT_GREY_200, textColor: colors.BLACK }}
+            onClick={() => document.getElementById('file-upload')?.click()}
+            disabled={uploadedImages.length >= MAX_IMAGES}
+          >
+            Upload Image
+          </MainButton>
+        </AICContent>
+      </AddImageContainer>
 
       {uploadedImages.length > 0 && (
         <ScrollableContainer>
@@ -100,6 +104,6 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           </UploadedImagesContainer>
         </ScrollableContainer>
       )}
-    </AddImageContainer>
+    </ImageUploaderContainer>
   )
 }

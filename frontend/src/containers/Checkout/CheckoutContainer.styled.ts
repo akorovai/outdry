@@ -2,7 +2,6 @@ import styled, { css } from 'styled-components'
 import { motion } from 'framer-motion'
 import { colors, fonts } from '@/consts'
 
-// Common Styles
 const flexColumn = css`
   display: flex;
   flex-direction: column;
@@ -22,7 +21,6 @@ const textStyle = (color: string, fontSize: string, fontWeight: string, lineHeig
   line-height: ${lineHeight};
 `
 
-// Wrapper and Containers
 export const WrapperContainer = styled(motion.div)`
   ${flexRow};
   width: 100%;
@@ -44,7 +42,6 @@ export const RightContainerContent = styled(motion.div)`
   gap: 3.125rem;
 `
 
-// Hassle-Free Section
 export const HassleFreeContainer = styled(motion.div)`
   ${flexColumn};
   width: 21.6875rem;
@@ -66,7 +63,6 @@ export const HFHText = styled(motion.p)`
   ${textStyle(colors.BLACK, '1.125rem', '400', '1.75rem')};
 `
 
-// Products Section
 export const ProductsContainer = styled(motion.div)`
   ${flexColumn};
   gap: 1rem;
@@ -148,7 +144,6 @@ export const AmountText = styled(motion.p)`
   text-align: center;
 `
 
-// Subtotal Section
 export const SubtotalContainer = styled(motion.div)`
   ${flexColumn};
   align-items: flex-end;
@@ -192,7 +187,6 @@ export const ShippingPriceText = styled(motion.h4)`
   ${textStyle(colors.BLACK, '0.75rem', '400', '1.125rem')};
 `
 
-// Checkout Left Section
 export const CheckoutLeftContainer = styled(motion.div)`
   ${flexColumn};
   padding: 3.125rem 4.8125rem 3.125rem 5rem;
@@ -336,7 +330,6 @@ export const SECInfoTime = styled(motion.span)`
   align-self: stretch;
 `
 
-// Final Page Styles
 export const CompleteSecondStepAndNewThirdSection = styled(motion.section)`
   display: flex;
   flex-direction: column;
@@ -473,7 +466,7 @@ export const FCCTitle = styled(motion.span)`
   font-size: 3rem;
   font-style: normal;
   font-weight: 500;
-  line-height: 145%; /* 4.35rem */
+  line-height: 145%;
   letter-spacing: -0.06rem;
 
   @media (max-width: 768px) {

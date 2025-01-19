@@ -16,8 +16,8 @@ import {
   RightContainerContent,
   RightContainerTitle,
 } from './LoginPageContainer.styled'
-import { colors } from '../../consts'
-import { useAuth } from '../../context/AuthContext/AuthContext.tsx'
+import { colors } from '@/consts'
+import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
 
 const LoginPageContainer: React.FC = (): React.ReactElement => {
   const [email, setEmail] = useState('')

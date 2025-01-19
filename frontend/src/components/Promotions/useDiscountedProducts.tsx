@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios' // Import Axios
 import { IProduct } from '@/models'
-import { useAuth } from '../../context/AuthContext/AuthContext.tsx'
+import { api, useAuth } from '@/context/AuthContext/AuthContext.tsx'
 
 const useDiscountedProducts = () => {
   const [products, setProducts] = useState<IProduct[]>([])
@@ -9,16 +8,10 @@ const useDiscountedProducts = () => {
   const [error, setError] = useState<string | null>(null)
   const { token } = useAuth()
 
-  const path = 'https://outdry-backend.orangeforest-84325f96.polandcentral.azurecontainerapps.io'
-
   useEffect(() => {
     const fetchDiscountedProducts = async () => {
       try {
-        const response = await axios.get(`${path}/api/products/discounted`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        const response = await api.get('/api/products/discounted') // Используем api
 
         if (response.status !== 200) {
           throw new Error('Failed to fetch discounted products')
@@ -37,7 +30,7 @@ const useDiscountedProducts = () => {
     }
 
     fetchDiscountedProducts()
-  }, [token]) // Add token as a dependency
+  }, [token])
 
   return { products, loading, error }
 }

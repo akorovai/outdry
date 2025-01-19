@@ -133,7 +133,9 @@ const ProductsPage: FC = () => {
           totalPages={totalPages}
           onPreviousClick={handlePreviousClick}
           onNextClick={handleNextClick}
-          category={category || 'new-in'}
+          onDeleteItem={itemId => {
+            console.log('Deleting item with ID:', itemId)
+          }}
         />
       </FilterWithProductsContainer>
       <Promotions isOnSale={true}>

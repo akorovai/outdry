@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { CartOverlayProps } from './types/cart.types.ts'
 import { EmptyCart } from './EmptyCart/EmptyCart'
 import { CartHeader } from './CartHeader/CartHeader'
-import CartItem from './CartItem/CartItem' // Import the memoized CartItem
+import CartItem from './CartItem/CartItem'
 import { CartSubtotal } from './CartSubtotal/CartSubtotal'
 import { Backdrop, CardItemList, CartOverlayContent, CartOverlayWrapper } from './styles'
 import { useNavigate } from 'react-router-dom'

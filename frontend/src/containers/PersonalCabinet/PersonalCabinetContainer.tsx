@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Breadcrumb } from '@/components'
 import {
   Container,
@@ -16,15 +16,27 @@ import Orders from './Orders/Orders.tsx'
 import AddressBook from './AddressBook/AddressBook.tsx'
 import LogOut from './LogOut/LogOut.tsx'
 import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
+
 import useAddresses from './AddressBook/useAddresses'
-import useOrders from './Orders/useOrders.tsx' // Import the useOrders hook
+import useOrders from './Orders/useOrders.tsx'
+import { useLocation } from 'react-router-dom'
 
 const PersonalCabinet: React.FC = (): React.ReactElement => {
   const { user, token } = useAuth()
   const [selectedOption, setSelectedOption] = useState<string>('Overview')
+  const location = useLocation()
 
   const { addresses, loading: addressesLoading, error, addAddress, editAddress, deleteAddress } = useAddresses(token)
-  const { orders, loading: ordersLoading } = useOrders() // Fetch orders using the useOrders hook
+  const { orders, loading: ordersLoading } = useOrders()
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search)
+    const tab = queryParams.get('tab')
+
+    if (tab === 'orders') {
+      setSelectedOption('Orders')
+    }
+  }, [location.search])
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option)

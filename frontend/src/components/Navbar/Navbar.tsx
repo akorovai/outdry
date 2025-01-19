@@ -16,7 +16,7 @@ import {
 } from './Navbar.styled.ts'
 import { colors, routePath } from '@/consts'
 import { CartOverlay } from '../Overlay'
-import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
+import { useAuth } from '../../context/AuthContext/AuthContext.tsx'
 
 interface NavbarProps {
   isMinimal?: boolean

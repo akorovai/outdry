@@ -25,7 +25,7 @@ export interface AuthContextType {
   login: (credentials: Credentials) => Promise<void>
   logout: () => Promise<void>
   register: (userData: UserData) => Promise<void>
-  refreshToken: () => Promise<void>
+  refreshToken: () => Promise<string>
   activateAccount: (emailToken: string) => Promise<void>
   recoverAccount: (email: string) => Promise<void>
   changePassword: (token: string, newPassword: string) => Promise<void>

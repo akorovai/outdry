@@ -14,8 +14,8 @@ import {
   RightContainerContent,
   RightContainerTitle,
 } from './RegisterPageContainer.styled'
-import { colors } from '../../consts'
-import { useAuth } from '../../context/AuthContext/AuthContext.tsx'
+import { colors } from '@/consts'
+import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
 
 const RegisterPageContainer: React.FC = (): React.ReactElement => {
   const [username, setUsername] = useState('')

@@ -3,7 +3,25 @@ import { motion } from 'framer-motion'
 import { colors } from '@/consts'
 import { fonts } from '../../../consts'
 
-// Reusable mixins
+export const customScrollbar = `
+  &::-webkit-scrollbar {
+    width: 8px; /* Ширина скроллбара */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: ${colors.LIGHT_GREY_200}; 
+    border-radius: 4px; 
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${colors.LIGHT_GREY_400}; 
+    border-radius: 4px; /* Скругление углов ползунка */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${colors.LIGHT_GREY_600};
+  }
+`
 const flexColumn = `
   display: flex;
   flex-direction: column;
@@ -21,7 +39,6 @@ const textStyle = (fontSize: string, fontWeight: number, color: string) => `
   color: ${color};
 `
 
-// Animations
 export const fadeInOut = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
@@ -59,7 +76,6 @@ export const inputFieldAnimation = {
   whileFocus: { borderColor: colors.LIGHT_GREEN_500, boxShadow: `0 0 0 2px ${colors.LIGHT_GREEN_500}` },
 }
 
-// Overlay Components
 export const OverlayBackdrop = styled(motion.div)`
   position: fixed;
   top: 0;
@@ -67,20 +83,31 @@ export const OverlayBackdrop = styled(motion.div)`
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  ${flexCenter};
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 1000;
   overflow: hidden;
 `
 
 export const OverlayContent = styled(motion.div)`
   background: ${colors.WHITE};
-  width: 70.25rem;
-  height: 56rem;
+  width: 90%;
+  max-width: 70.25rem;
+  height: 90%;
+  max-height: 56rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow-y: auto;
   border-radius: 0.25rem;
   padding-bottom: 4.75rem;
+
+  ${customScrollbar};
+
+  @media (max-width: 768px) {
+    width: 95%;
+    height: 95%;
+  }
 `
 
 export const AddOverlayContent = styled(motion.div)`
@@ -90,6 +117,12 @@ export const AddOverlayContent = styled(motion.div)`
   gap: 1.875rem;
   overflow-y: auto;
   max-height: calc(100% - 6rem);
+
+  ${customScrollbar};
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `
 
 export const AOCHeader = styled(motion.div)`
@@ -100,10 +133,15 @@ export const AOCHeader = styled(motion.div)`
 `
 
 export const AOCTitle = styled(motion.p)`
-  ${textStyle('2.25rem', 600, colors.BLACK)};
+  ${textStyle('2rem', 600, colors.BLACK)};
   line-height: 2.75rem;
   letter-spacing: -0.045rem;
   align-self: stretch;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
 `
 
 export const HeaderLine = styled(motion.div)`
@@ -122,6 +160,11 @@ export const AOCFormContainer = styled(motion.div)`
   align-items: flex-start;
   align-self: stretch;
   gap: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
 `
 
 export const AOCFieldsContainer = styled(motion.div)`
@@ -136,6 +179,10 @@ export const AOCFieldsContainer = styled(motion.div)`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `
 
 export const AOCField = styled(motion.div)`
@@ -148,6 +195,11 @@ export const AOCFieldTitle = styled(motion.h3)`
   ${textStyle('1.25rem', 500, colors.BLACK)};
   align-self: stretch;
   line-height: 1.875rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
 `
 
 export const InputFieldContainer = styled(motion.div)`
@@ -224,10 +276,27 @@ export const ArrowIcon = styled(motion.div)`
   ${flexCenter};
 `
 
-export const AddImagesContainer = styled(motion.div)`
-  ${flexColumn};
-  width: 50%;
-  gap: 1rem;
+export const AddImageContainer = styled(motion.div)`
+  ${flexCenter};
+  height: 34.75rem;
+  padding: 0 9.4375rem;
+  align-self: stretch;
+  border: 1px solid ${colors.LIGHT_GREY_200};
+  background: ${colors.LIGHT_GREY_300};
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+  margin-bottom: 1rem; /* Add margin to separate from UploadedImagesContainer */
+
+  @media (max-width: 768px) {
+    height: 20rem;
+    padding: 0 2rem;
+  }
+`
+
+export const UploadedImagesContainer = styled(motion.div)`
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 `
 
 export const AICHeader = styled(motion.div)`
@@ -237,20 +306,14 @@ export const AICHeader = styled(motion.div)`
   align-self: stretch;
 `
 
-export const AddImageContainer = styled(motion.div)`
-  ${flexCenter};
-  height: 34.75rem;
-  padding: 0 9.4375rem;
-  align-self: stretch;
-  border: 1px solid ${colors.LIGHT_GREY_200};
-  background: ${colors.LIGHT_GREY_300};
-  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-`
-
 export const AICContent = styled(motion.div)`
   ${flexColumn};
   width: 15.6875rem;
   gap: 0.75rem;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `
 
 export const DropImageHereContainer = styled(motion.div)`
@@ -263,22 +326,35 @@ export const DropImageHereText = styled(motion.p)`
   ${textStyle('1.125rem', 400, colors.BLACK)};
   text-align: center;
   line-height: 1.75rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
 `
 
 export const OrSection = styled(motion.section)`
   ${flexCenter};
   gap: 1rem;
   align-self: stretch;
+  width: 100%; /* Убедимся, что контейнер занимает всю ширину */
 `
 
 export const OrTest = styled(motion.p)`
   ${textStyle('1.125rem', 400, colors.BLACK)};
   text-align: center;
   line-height: 1.75rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
 `
 
 export const OrLine = styled(motion.div)`
-  width: 6.25rem;
+  width: 50%;
+  min-width: 4rem;
+  max-width: 8rem;
   height: 0.0625rem;
   background: ${colors.BLACK};
 `
@@ -287,13 +363,8 @@ export const ScrollableContainer = styled(motion.div)`
   max-height: 500px;
   overflow-y: auto;
   padding-right: 10px;
-`
 
-export const UploadedImagesContainer = styled(motion.div)`
-  margin-top: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  ${customScrollbar};
 `
 
 export const ImageWrapper = styled(motion.div)`
@@ -343,6 +414,10 @@ export const BottomContainer = styled(motion.div)`
   background: ${colors.WHITE};
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
   z-index: 10;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `
 
 export const PriceText = styled(AOCFieldTitle)`
@@ -365,4 +440,29 @@ export const RightBottom = styled(motion.div)`
   ${flexCenter};
   gap: 0.75rem;
   height: 100%;
+`
+export const TextArea = styled.textarea`
+  width: 100%;
+  border: none;
+  outline: none;
+  font-family: ${fonts.POPPINS};
+  font-size: 1rem;
+  font-weight: 400;
+  color: ${colors.BLACK};
+  line-height: 1.5rem;
+  resize: vertical;
+  min-height: 100px;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.5rem;
+  background: ${colors.WHITE};
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+
+  &::placeholder {
+    color: ${colors.LIGHT_GREY_400};
+  }
+`
+export const ImageUploaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `

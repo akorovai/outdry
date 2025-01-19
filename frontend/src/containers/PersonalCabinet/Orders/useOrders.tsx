@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/context/AuthContext/AuthContext'
+import axios from 'axios'
 import { OrderResponse } from '@/models'
+import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
 
 const useOrders = () => {
-  const { token } = useAuth()
   const [orders, setOrders] = useState<OrderResponse[]>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const { token } = useAuth()
 
   useEffect(() => {
     const fetchOrders = async () => {
+      if (!token) return
+
       try {
-        const response = await fetch(
+        const response = await axios.get(
           'https://outdry-backend.orangeforest-84325f96.polandcentral.azurecontainerapps.io/api/orders',
           {
             headers: {
@@ -19,19 +22,20 @@ const useOrders = () => {
           },
         )
 
-        if (!response.ok) {
+        if (response.status === 200) {
+          setOrders(response.data.message)
+        } else {
           throw new Error('Failed to fetch orders')
         }
-
-        const data = await response.json()
-        setOrders(data.message)
+      } catch (err) {
+        console.error('Error fetching orders:', err)
       } finally {
         setLoading(false)
       }
     }
 
     fetchOrders()
-  }, [token])
+  }, [token]) // Добавляем token в зависимости useEffect
 
   return { orders, loading }
 }

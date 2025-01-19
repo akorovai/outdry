@@ -6,6 +6,7 @@ import storage from '@/consts/storage'
 import { localStorageService } from '../../services'
 import AuthEndpoints from './AuthEndpoints'
 import { jwtDecode } from 'jwt-decode'
+
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean
 }
@@ -16,7 +17,8 @@ interface ErrorResponse {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 const BASE_URL = 'https://outdry-backend.orangeforest-84325f96.polandcentral.azurecontainerapps.io'
-const api = axios.create({
+
+export const api = axios.create({
   baseURL: `${BASE_URL}/`,
   headers: {
     'Content-Type': 'application/json',
@@ -26,77 +28,129 @@ const api = axios.create({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(JSON.parse(localStorageService.getItem(storage.USER) || 'null'))
   const [token, setToken] = useState<string | null>(localStorageService.getItem(storage.ACCESS_TOKEN) || null)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [refreshSubscribers, setRefreshSubscribers] = useState<Array<(token: string) => void>>([])
   const navigate = useNavigate()
+
+  const updateTokens = useCallback((accessToken: string, refreshToken?: string) => {
+    setToken(accessToken)
+    localStorageService.setItem(storage.ACCESS_TOKEN, accessToken)
+    if (refreshToken) {
+      localStorageService.setItem(storage.REFRESH_TOKEN, refreshToken)
+    }
+  }, [])
+
+  const clearAuthData = useCallback(() => {
+    setUser(null)
+    setToken(null)
+    localStorageService.removeItem(storage.ACCESS_TOKEN)
+    localStorageService.removeItem(storage.REFRESH_TOKEN)
+    localStorageService.removeItem(storage.USER)
+  }, [])
 
   const logout = useCallback(async (): Promise<void> => {
     try {
-      await api.post(AuthEndpoints.LOGOUT)
-      setUser(null)
-      setToken(null)
-      localStorageService.removeItem(storage.ACCESS_TOKEN)
-      localStorageService.removeItem(storage.REFRESH_TOKEN)
-      localStorageService.removeItem(storage.USER)
-      navigate('/login')
+      const currentToken = localStorageService.getItem(storage.ACCESS_TOKEN)
+      if (currentToken) {
+        await api.post(AuthEndpoints.LOGOUT, null, {
+          headers: { Authorization: `Bearer ${currentToken}` },
+        })
+      }
     } catch (error) {
       console.error('Logout error:', error)
+    } finally {
+      clearAuthData()
+      navigate('/login')
     }
-  }, [navigate])
+  }, [navigate, clearAuthData])
 
-  const refreshToken = useCallback(async (): Promise<void> => {
+  const onRefreshed = useCallback(
+    (token: string) => {
+      refreshSubscribers.forEach(callback => callback(token))
+      setRefreshSubscribers([])
+    },
+    [refreshSubscribers],
+  )
+
+  const refreshToken = useCallback(async (): Promise<string> => {
     try {
+      if (isRefreshing) {
+        return new Promise(resolve => {
+          setRefreshSubscribers(prev => [...prev, resolve])
+        })
+      }
+
+      setIsRefreshing(true)
       const refreshToken = localStorageService.getItem(storage.REFRESH_TOKEN)
       if (!refreshToken) {
         throw new Error('No refresh token found')
       }
-      const response: AxiosResponse<{ accessToken: string }> = await api.post(AuthEndpoints.REFRESH_TOKEN, {
-        refreshToken,
-      })
+
+      const response: AxiosResponse<{ accessToken: string }> = await axios.post(
+        `${BASE_URL}${AuthEndpoints.REFRESH_TOKEN}`,
+        { refreshToken },
+        { headers: { 'Content-Type': 'application/json' } },
+      )
+
       const newToken = response.data.accessToken
-      localStorageService.setItem(storage.ACCESS_TOKEN, newToken)
-      setToken(newToken)
+      updateTokens(newToken)
+      onRefreshed(newToken)
+      return newToken
     } catch (error) {
       console.error('Token refresh error:', error)
       await logout()
-      throw new Error((error as AxiosError<ErrorResponse>).response?.data?.message || 'Token refresh failed')
+      throw error
+    } finally {
+      setIsRefreshing(false)
     }
-  }, [logout])
+  }, [isRefreshing, logout, updateTokens, onRefreshed])
+
+  const isAuthError = (status?: number) => status === 401 || status === 403
 
   useEffect(() => {
-    const interceptor = api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-      const token = localStorageService.getItem(storage.ACCESS_TOKEN)
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-      }
-      return config
-    })
+    let requestInterceptor: number
+    let responseInterceptor: number
 
-    return () => {
-      api.interceptors.request.eject(interceptor)
-    }
-  }, [])
-
-  useEffect(() => {
-    const interceptor = api.interceptors.response.use(
-      response => response,
-      async (error: AxiosError) => {
-        const originalRequest = error.config as CustomAxiosRequestConfig
-        if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
-          originalRequest._retry = true
-          try {
-            const newToken = await refreshToken()
-            originalRequest.headers.Authorization = `Bearer ${newToken}`
-            return api(originalRequest)
-          } catch (refreshError) {
-            console.error('Token refresh failed:', refreshError)
-            await logout()
-          }
+    const setupInterceptors = () => {
+      requestInterceptor = api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+        const currentToken = localStorageService.getItem(storage.ACCESS_TOKEN)
+        if (currentToken) {
+          config.headers.Authorization = `Bearer ${currentToken}`
         }
-        return Promise.reject(error)
-      },
-    )
+        return config
+      })
+
+      responseInterceptor = api.interceptors.response.use(
+        response => response,
+        async (error: AxiosError) => {
+          const originalRequest = error.config as CustomAxiosRequestConfig
+
+          if (isAuthError(error.response?.status) && originalRequest && !originalRequest._retry) {
+            originalRequest._retry = true
+
+            try {
+              const newToken = await refreshToken()
+              originalRequest.headers.Authorization = `Bearer ${newToken}`
+              return api(originalRequest)
+            } catch (refreshError) {
+              console.error('Token refresh failed:', refreshError)
+              if (error.response?.status === 403) {
+                console.error('Access forbidden. Redirecting to login...')
+              }
+              await logout()
+              throw refreshError
+            }
+          }
+          return Promise.reject(error)
+        },
+      )
+    }
+
+    setupInterceptors()
 
     return () => {
-      api.interceptors.response.eject(interceptor)
+      api.interceptors.request.eject(requestInterceptor)
+      api.interceptors.response.eject(responseInterceptor)
     }
   }, [logout, refreshToken])
 
@@ -121,9 +175,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         setUser(user)
-        setToken(accessToken)
-        localStorageService.setItem(storage.ACCESS_TOKEN, accessToken)
-        localStorageService.setItem(storage.REFRESH_TOKEN, refreshToken)
+        updateTokens(accessToken, refreshToken)
         localStorageService.setItem(storage.USER, JSON.stringify(user))
 
         navigate('/')
@@ -132,7 +184,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error((error as AxiosError<ErrorResponse>).response?.data?.message || 'Login failed')
       }
     },
-    [navigate],
+    [navigate, updateTokens],
   )
 
   const register = useCallback(
@@ -155,15 +207,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           params: { emailToken },
         })
         const { jwtToken } = response.data
-        localStorageService.setItem(storage.ACCESS_TOKEN, jwtToken)
-        setToken(jwtToken)
+        updateTokens(jwtToken)
         navigate('/')
       } catch (error) {
         console.error('Account activation error:', error)
         throw new Error((error as AxiosError<ErrorResponse>).response?.data?.message || 'Account activation failed')
       }
     },
-    [navigate],
+    [navigate, updateTokens],
   )
 
   const recoverAccount = useCallback(async (email: string): Promise<void> => {
@@ -208,7 +259,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext)
   if (context === undefined) {

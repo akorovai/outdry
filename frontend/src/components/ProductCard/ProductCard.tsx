@@ -15,7 +15,7 @@ import {
   ProductInfoHeader,
   SaleLabel,
 } from './ProductCard.styled.ts'
-import useCart from '../../hooks/useCart.tsx'
+import useCart from '@/hooks/useCart.tsx'
 
 interface IProductCardProps {
   id: number
@@ -27,7 +27,7 @@ interface IProductCardProps {
   isOnSale?: boolean
   isWishlist?: boolean
   onQuickBuyClick?: () => void
-  onTrashClick?: () => void
+  onTrashClick?: () => void // Добавьте этот пропс
   discountPercent?: number
   category: string
 }
@@ -58,7 +58,7 @@ const ProductCard: FC<IProductCardProps> = ({
 
   const handleTrashClick = (e: MouseEvent) => {
     e.stopPropagation()
-    onTrashClick?.()
+    onTrashClick?.() // Вызовите функцию удаления
   }
 
   const handleAddToCart = async (e: MouseEvent) => {
@@ -71,7 +71,7 @@ const ProductCard: FC<IProductCardProps> = ({
     if (!isOnSale && !isWishlist) return null
     return (
       <SaleLabel
-        onClick={isWishlist ? handleTrashClick : undefined}
+        onClick={isWishlist ? handleTrashClick : undefined} // Добавьте обработчик удаления
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
+
 import { useNavigate } from 'react-router-dom'
 
 const LogOut: React.FC = (): React.ReactElement => {

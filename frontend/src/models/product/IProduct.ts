@@ -1,15 +1,15 @@
 export interface IProduct {
-  id: number
+  id?: number
   name: string
   description: string
-  price: number
-  color: ColorResponse
-  type: TypeResponse
-  links: string[]
-  gender: string
+  links: string[] | File[]
   amount: number
-  discount: number
   size: string
+  type: { id: number; name: string }
+  color: { id: number; name: string; code: string }
+  price: number
+  discount?: number
+  gender: string
 }
 
 export interface ColorResponse {

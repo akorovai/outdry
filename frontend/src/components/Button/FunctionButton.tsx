@@ -75,15 +75,7 @@ interface FunctionButtonProps {
   icon?: React.ReactNode
   backgroundColor?: string
   textColor?: string
-  onClick?: (value?: number) => void
-  expandable?: boolean
-}
-interface FunctionButtonProps {
-  text: string
-  icon?: React.ReactNode
-  backgroundColor?: string
-  textColor?: string
-  onClick?: (value?: number) => void // Параметр value может быть number или undefined
+  onClick?: (value?: number) => void // Updated to accept a value
   expandable?: boolean
 }
 
@@ -100,33 +92,33 @@ const FunctionButton: React.FC<FunctionButtonProps> = ({
 
   const handleClick = () => {
     if (expandable) {
-      setIsExpanded(true)
+      setIsExpanded(true) // Expand the button to show the input field
     } else {
-      onClick?.() // Вызов без параметра, если expandable = false
+      onClick?.() // Call the onClick handler without a value
     }
   }
 
   const handleInputBlur = () => {
-    setIsExpanded(false)
-    const discount = parseFloat(inputValue)
+    setIsExpanded(false) // Collapse the button
+    const discount = parseFloat(inputValue) // Parse the input value
     if (!isNaN(discount)) {
-      onClick?.(discount) // Передаем значение скидки в родительский компонент
+      onClick?.(discount) // Pass the discount value to the onClick handler
     }
-    setInputValue('')
+    setInputValue('') // Clear the input field
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value)
+    setInputValue(e.target.value) // Update the input value
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      const discount = parseFloat(inputValue)
+      const discount = parseFloat(inputValue) // Parse the input value
       if (!isNaN(discount)) {
-        onClick?.(discount) // Передаем значение скидки в родительский компонент
+        onClick?.(discount) // Pass the discount value to the onClick handler
       }
-      setIsExpanded(false) // Сворачиваем поле ввода
-      setInputValue('') // Очищаем поле ввода
+      setIsExpanded(false) // Collapse the button
+      setInputValue('') // Clear the input field
     }
   }
 
@@ -136,7 +128,7 @@ const FunctionButton: React.FC<FunctionButtonProps> = ({
       onClick={handleClick}
       initial={{ width: 'auto' }}
       animate={{
-        width: isExpanded ? '250px' : 'auto',
+        width: isExpanded ? '250px' : 'auto', // Expand/collapse animation
       }}
       transition={{ duration: 0.3 }}
     >
@@ -157,4 +149,5 @@ const FunctionButton: React.FC<FunctionButtonProps> = ({
     </ButtonContainer>
   )
 }
+
 export default FunctionButton

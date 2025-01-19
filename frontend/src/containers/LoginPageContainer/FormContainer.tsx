@@ -31,7 +31,7 @@ const ForgetYourPasswordLink = styled(Link)`
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 400;
-  line-height: 140%; /* 1.225rem */
+  line-height: 140%;
   align-self: stretch;
   text-decoration: none;
 

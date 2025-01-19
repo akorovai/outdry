@@ -57,6 +57,7 @@ export const BottomPanel: React.FC<BottomPanelProps> = ({ price, onPriceChange, 
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
+          {price && '$'}
           {price}
         </PriceText>
         <MainButton

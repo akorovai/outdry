@@ -13,7 +13,7 @@ import {
 } from './styles'
 import { colors } from '@/consts'
 import { Divider } from '../CartItem/styles.ts'
-import { useHistory } from 'react-router-dom' // Добавьте useHistory
+import { useNavigate } from 'react-router-dom'
 
 interface CartSubtotalProps {
   total: number
@@ -21,10 +21,10 @@ interface CartSubtotalProps {
 }
 
 export const CartSubtotal: React.FC<CartSubtotalProps> = ({ total, onCheckoutClick }) => {
-  const history = useHistory() // Используйте useHistory
+  const navigate = useNavigate()
 
   const handleViewOrdersClick = () => {
-    history.push('/profile?tab=orders') // Переход на страницу профиля с параметром
+    navigate('/profile?tab=orders')
   }
 
   return (
@@ -56,7 +56,9 @@ export const CartSubtotal: React.FC<CartSubtotalProps> = ({ total, onCheckoutCli
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <ViewOrdersLink onClick={handleViewOrdersClick}>View your orders</ViewOrdersLink>
+        <ViewOrdersLink handleLinkClick={handleViewOrdersClick} onClick={handleViewOrdersClick}>
+          View your orders
+        </ViewOrdersLink>
       </motion.div>
     </SubtotalContainer>
   )

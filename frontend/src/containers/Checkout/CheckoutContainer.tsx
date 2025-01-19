@@ -64,8 +64,7 @@ const CheckoutContainer: FC = (): ReactElement => {
   const [deliveryTime, setDeliveryTime] = useState('3-5 business days')
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('Visa')
 
-  // Состояние для списка товаров
-  const [products, setProducts] = useState<Product[]>([
+  const [products] = useState<Product[]>([
     {
       id: '1',
       name: 'Geo Palms - Mens Recycled Zip Hoodie - Grey',

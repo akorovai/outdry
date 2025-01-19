@@ -75,9 +75,10 @@ export const SubtotalTextValue = styled.p`
   line-height: 32px;
 `
 
-export const ViewOrdersLink = styled.p<{ handleLinkClick: () => void }>`
+export const ViewOrdersLink = styled.span<{ handleLinkClick: () => void }>`
   color: ${colors.BLACK};
   text-align: center;
+  cursor: pointer;
   font-family: ${fonts.INTER};
   font-size: 16px;
   font-style: normal;
@@ -86,4 +87,8 @@ export const ViewOrdersLink = styled.p<{ handleLinkClick: () => void }>`
   text-decoration-line: underline;
   text-transform: uppercase;
   animation: ${slideUp} 0.5s ease-in-out 0.2s;
+
+  &:hover {
+    color: ${colors.LIGHT_GREY_600};
+  }
 `

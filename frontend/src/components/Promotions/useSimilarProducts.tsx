@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
-
+import { api, useAuth } from '@/context/AuthContext/AuthContext.tsx'
 import { IProduct } from '@/models'
 
 interface ResponseRecord {
@@ -13,7 +11,7 @@ const useSimilarProducts = (productId: number) => {
   const [similarProducts, setSimilarProducts] = useState<IProduct[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const { token, BASE_URL } = useAuth()
+  const { token } = useAuth()
 
   useEffect(() => {
     const fetchSimilarProducts = async () => {
@@ -21,11 +19,7 @@ const useSimilarProducts = (productId: number) => {
       setError(null)
 
       try {
-        const response = await axios.get<ResponseRecord>(`${BASE_URL}/api/products/${productId}/similar`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        const response = await api.get<ResponseRecord>(`/api/products/${productId}/similar`) // Используем api
 
         if (response.status === 200 && response.data.message) {
           setSimilarProducts(response.data.message)
@@ -44,7 +38,7 @@ const useSimilarProducts = (productId: number) => {
     }
 
     fetchSimilarProducts()
-  }, [productId, token, BASE_URL])
+  }, [productId, token])
 
   return { similarProducts, loading, error }
 }

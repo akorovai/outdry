@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
-import { IProduct } from '../models'
-import { useAuth } from '../context/AuthContext/AuthContext.tsx'
+import { IProduct } from '@/models'
+import { useAuth } from '@/context/AuthContext/AuthContext'
 
 interface ResponseRecord {
   code: number
@@ -17,18 +17,39 @@ interface WishListFilters {
   maxPrice?: number
 }
 
+interface ApiResponse {
+  success: boolean
+  message: string
+}
+
 const useWishList = () => {
   const [wishListProducts, setWishListProducts] = useState<IProduct[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const { token, BASE_URL } = useAuth()
 
-  const fetchWishListProducts = useCallback(
-    async (filters: WishListFilters = {}) => {
+  const handleApiCall = useCallback(
+    async <T,>(apiCall: () => Promise<T>): Promise<T & { success: boolean; message: string }> => {
       setLoading(true)
       setError(null)
 
       try {
+        const result = await apiCall()
+        return { ...result, success: true, message: 'Success' }
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
+        setError(errorMessage)
+        return { success: false, message: errorMessage } as T & { success: boolean; message: string }
+      } finally {
+        setLoading(false)
+      }
+    },
+    [],
+  )
+
+  const fetchWishListProducts = useCallback(
+    async (filters: WishListFilters = {}): Promise<ApiResponse> => {
+      return handleApiCall(async () => {
         const response = await axios.get<ResponseRecord>(`${BASE_URL}/api/wishlist/products`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -38,29 +59,18 @@ const useWishList = () => {
 
         if (response.status === 200 && Array.isArray(response.data.message)) {
           setWishListProducts(response.data.message)
+          return { success: true, message: 'Products fetched successfully' }
         } else {
           throw new Error('Failed to fetch wishlist products')
         }
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError('An unknown error occurred')
-        }
-      } finally {
-        setLoading(false)
-      }
+      })
     },
-    [BASE_URL, token],
+    [BASE_URL, token, handleApiCall],
   )
 
-  // Add a product to the wishlist
   const addToWishList = useCallback(
-    async (productId: number) => {
-      setLoading(true)
-      setError(null)
-
-      try {
+    async (productId: number): Promise<ApiResponse> => {
+      return handleApiCall(async () => {
         const response = await axios.post<ResponseRecord>(
           `${BASE_URL}/api/wishlist/add/${productId}`,
           {},
@@ -72,33 +82,19 @@ const useWishList = () => {
         )
 
         if (response.status === 200) {
-          // Refresh the wishlist after adding a product
           await fetchWishListProducts()
-          return { success: true, message: response.data.message }
+          return { success: true, message: response.data.message as string }
         } else {
           throw new Error('Failed to add product to wishlist')
         }
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError('An unknown error occurred')
-        }
-        return { success: false, message: error || 'Failed to add product to wishlist' }
-      } finally {
-        setLoading(false)
-      }
+      })
     },
-    [BASE_URL, token, fetchWishListProducts, error],
+    [BASE_URL, token, fetchWishListProducts, handleApiCall],
   )
 
-  // Delete a product from the wishlist
   const deleteWishListItem = useCallback(
-    async (productId: number) => {
-      setLoading(true)
-      setError(null)
-
-      try {
+    async (productId: number): Promise<ApiResponse> => {
+      return handleApiCall(async () => {
         const response = await axios.delete<ResponseRecord>(`${BASE_URL}/api/wishlist/delete/${productId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -106,32 +102,17 @@ const useWishList = () => {
         })
 
         if (response.status === 200) {
-          // Refresh the wishlist after deleting a product
-          await fetchWishListProducts()
-          return { success: true, message: response.data.message }
+          return { success: true, message: response.data.message as string }
         } else {
           throw new Error('Failed to delete product from wishlist')
         }
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError('An unknown error occurred')
-        }
-        return { success: false, message: error || 'Failed to delete product from wishlist' }
-      } finally {
-        setLoading(false)
-      }
+      })
     },
-    [BASE_URL, token, fetchWishListProducts, error],
+    [BASE_URL, token, handleApiCall],
   )
 
-  // Delete all products from the wishlist
-  const deleteAllWishListItems = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-
-    try {
+  const deleteAllWishListItems = useCallback(async (): Promise<ApiResponse> => {
+    return handleApiCall(async () => {
       const response = await axios.delete<ResponseRecord>(`${BASE_URL}/api/wishlist/delete-all`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -139,27 +120,19 @@ const useWishList = () => {
       })
 
       if (response.status === 200) {
-        // Clear the wishlist after deleting all products
         setWishListProducts([])
-        return { success: true, message: response.data.message }
+        return { success: true, message: response.data.message as string }
       } else {
         throw new Error('Failed to delete all products from wishlist')
       }
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message)
-      } else {
-        setError('An unknown error occurred')
-      }
-      return { success: false, message: error || 'Failed to delete all products from wishlist' }
-    } finally {
-      setLoading(false)
-    }
-  }, [BASE_URL, token, error])
+    })
+  }, [BASE_URL, token, handleApiCall])
 
   useEffect(() => {
-    fetchWishListProducts()
-  }, [fetchWishListProducts])
+    if (token) {
+      fetchWishListProducts()
+    }
+  }, [fetchWishListProducts, token])
 
   return {
     wishListProducts,

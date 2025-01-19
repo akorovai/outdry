@@ -1,4 +1,4 @@
-import React, { SetStateAction, useEffect, useState, useMemo, useCallback } from 'react'
+import React, { SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { RatingSummary } from './RatingSummary'
 import { ReviewsSection } from './ReviewsSection'
@@ -29,13 +29,13 @@ const CustomerReviews: React.FC<ICustomerReviews> = ({ setMessagesNumber }) => {
   useEffect(() => {
     const loadReviews = async () => {
       try {
-        await fetchReviews()
+        // await fetchReviews()
       } catch (error) {
         console.error('Failed to fetch reviews:', error)
       }
     }
     loadReviews()
-  }, [fetchReviews, productId])
+  }, [fetchReviews])
 
   useEffect(() => {
     setMessagesNumber(reviews.length)
@@ -80,11 +80,12 @@ const CustomerReviews: React.FC<ICustomerReviews> = ({ setMessagesNumber }) => {
         subject: reviewData.subject,
       })
 
-      if (result.success) {
+      if (result?.success) {
+        // Проверяем, что result не undefined
         setIsOverlayVisible(false)
         await fetchReviews()
       } else {
-        console.error('Failed to add review:', result.message)
+        console.error('Failed to add review:', result?.message || 'Unknown error')
       }
     },
     [addReview, fetchReviews, productId],

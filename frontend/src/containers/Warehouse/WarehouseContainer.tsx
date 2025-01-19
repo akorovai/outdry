@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FilterWithProductsContainer } from '../../pages/ProductsPage/ProductsPage.styled.ts'
-import { FunctionButton, ProductFilter, SVG } from '../../components'
+import { Breadcrumb, FunctionButton, SVG } from '../../components'
 import { AddProductOverlay } from '../../components/Overlay'
 import {
   ButtonsContainer,
@@ -25,23 +25,13 @@ import {
   TableRow,
   TableWrapper,
 } from './WarehouseContainer.styled'
-import { colors } from '../../consts'
-
-interface Product {
-  id: number
-  name: string
-  inventory: number
-  size: string
-  type: string
-  color: string
-  price: number
-  discount: number | null
-  gender: string
-  image: string
-}
+import { colors } from '@/consts'
+import { useProductApi } from './useWarehouse'
+import { IProduct } from '@/models'
+import { FilterHeader, FilterTitle } from '@/components/ProductFilter/ProductFilter.styled.ts'
 
 interface EditedValues {
-  [key: number]: Partial<Product>
+  [key: number]: Partial<IProduct>
 }
 
 const WarehouseContainer: React.FC = (): React.ReactElement => {
@@ -50,46 +40,30 @@ const WarehouseContainer: React.FC = (): React.ReactElement => {
   const [selectAll, setSelectAll] = useState<boolean>(false)
   const [editing, setEditing] = useState<boolean>(false)
   const [editedValues, setEditedValues] = useState<EditedValues>({})
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: 1,
-      name: 'Product 1',
-      inventory: 10,
-      size: 'M',
-      type: 'T-Shirt',
-      color: 'Red',
-      price: 20,
-      discount: 10,
-      gender: 'Unisex',
-      image: 'https://www.mountaingoatsoftware.com/uploads/blog/2016-09-06-what-is-a-product.png',
-    },
-    {
-      id: 2,
-      name: 'Product 2',
-      inventory: 5,
-      size: 'L',
-      type: 'Jeans',
-      color: 'Blue',
-      price: 40,
-      discount: null,
-      gender: 'Male',
-      image: 'https://www.mountaingoatsoftware.com/uploads/blog/2016-09-06-what-is-a-product.png',
-    },
-    {
-      id: 3,
-      name: 'Product 3',
-      inventory: 8,
-      size: 'S',
-      type: 'Dress',
-      color: 'Green',
-      price: 30,
-      discount: 20,
-      gender: 'Female',
-      image: 'https://www.mountaingoatsoftware.com/uploads/blog/2016-09-06-what-is-a-product.png',
-    },
-  ])
-
+  const [products, setProducts] = useState<IProduct[]>([])
   const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(false)
+
+  const { addProduct, modifyProduct, deleteProduct, addDiscount, getAllProducts } = useProductApi()
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const products = await getAllProducts()
+        console.log('Fetched products:', products)
+        if (Array.isArray(products)) {
+          setProducts(products)
+        } else {
+          console.error('Expected an array of products but received:', products)
+          setProducts([])
+        }
+      } catch (err) {
+        console.error('Failed to fetch products:', err)
+        setProducts([])
+      }
+    }
+
+    fetchProducts()
+  }, [])
 
   const handleParameterClick = (parameter: string) => {
     setSelectedParameter(parameter)
@@ -108,29 +82,57 @@ const WarehouseContainer: React.FC = (): React.ReactElement => {
 
     const updatedSelectedProducts: { [key: number]: boolean } = {}
     products.forEach(product => {
-      updatedSelectedProducts[product.id] = newSelectAll
+      updatedSelectedProducts[product.id || 0] = newSelectAll
     })
 
     setSelectedProducts(updatedSelectedProducts)
   }
 
-  const handleDelete = () => {
-    const updatedProducts = products.filter(product => !selectedProducts[product.id])
-    setProducts(updatedProducts)
-    setSelectedProducts({})
-    setSelectAll(false)
+  const handleDelete = async () => {
+    try {
+      await Promise.all(
+        Object.keys(selectedProducts).map(async id => {
+          if (selectedProducts[Number(id)]) {
+            await deleteProduct(Number(id))
+          }
+        }),
+      )
+
+      const updatedProducts = products.filter(product => !selectedProducts[product.id || 0])
+      setProducts(updatedProducts)
+      setSelectedProducts({})
+      setSelectAll(false)
+    } catch (err) {
+      console.error('Failed to delete products:', err)
+    }
   }
 
-  const handleChange = () => {
-    setEditing(!editing)
+  const handleChange = async () => {
     if (editing) {
-      const updatedProducts = products.map(product => ({
-        ...product,
-        ...editedValues[product.id],
-      }))
-      setProducts(updatedProducts)
-      setEditedValues({})
+      try {
+        await Promise.all(
+          Object.keys(editedValues).map(async id => {
+            const productId = Number(id)
+            const product = products.find(p => p.id === productId)
+            if (product) {
+              const productRequest: IProduct = {
+                ...product,
+                ...editedValues[productId],
+                discount: product.discount !== null ? product.discount : undefined,
+              }
+
+              const updatedProduct = await modifyProduct(productId, productRequest)
+              setProducts(prevProducts => prevProducts.map(p => (p.id === productId ? updatedProduct : p)))
+            }
+          }),
+        )
+
+        setEditedValues({})
+      } catch (err) {
+        console.error('Failed to update products:', err)
+      }
     }
+    setEditing(!editing)
   }
 
   const handleInputChange = (id: number, field: string, value: string) => {
@@ -138,7 +140,7 @@ const WarehouseContainer: React.FC = (): React.ReactElement => {
       ...prev,
       [id]: {
         ...prev[id],
-        [field]: value,
+        [field]: field === 'amount' || field === 'price' ? Number(value) : value,
       },
     }))
   }
@@ -157,22 +159,37 @@ const WarehouseContainer: React.FC = (): React.ReactElement => {
     }
   }
 
-  const handleDiscountChange = (discount?: number) => {
-    if (discount === undefined) return
+  const handleDiscountChange = async (discount?: number) => {
+    if (discount === undefined || discount < 0 || discount > 100) {
+      console.error('Invalid discount value')
+      return
+    }
 
-    const updatedProducts = products.map(product => {
-      if (selectedProducts[product.id]) {
-        return {
-          ...product,
-          discount: discount,
+    try {
+      await Promise.all(
+        Object.keys(selectedProducts).map(async id => {
+          if (selectedProducts[Number(id)]) {
+            await addDiscount(Number(id), discount)
+          }
+        }),
+      )
+
+      const updatedProducts = products.map(product => {
+        if (selectedProducts[product.id || 0]) {
+          return {
+            ...product,
+            discount: discount,
+          }
         }
-      }
-      return product
-    })
-    setProducts(updatedProducts)
+        return product
+      })
+      setProducts(updatedProducts)
+    } catch (err) {
+      console.error('Failed to apply discount:', err)
+    }
   }
 
-  const renderPrice = (price: number, discount: number | null) => {
+  const renderPrice = (price: number, discount: number | null | undefined) => {
     if (discount) {
       const discountedPrice = price * (1 - discount / 100)
       return (
@@ -184,7 +201,12 @@ const WarehouseContainer: React.FC = (): React.ReactElement => {
     }
     return `$${price.toFixed(2)}`
   }
-
+  const getSrc = (link: string | File): string => {
+    if (typeof link === 'string') {
+      return link
+    }
+    return URL.createObjectURL(link)
+  }
   useEffect(() => {
     if (isOverlayVisible) {
       document.body.style.overflow = 'hidden'
@@ -204,6 +226,29 @@ const WarehouseContainer: React.FC = (): React.ReactElement => {
   const closeOverlay = () => {
     setIsOverlayVisible(false)
   }
+  const sizeMapping: { [key: string]: string } = {
+    XS: 'XS',
+    S: 'S',
+    M: 'M',
+    L: 'L',
+    XL: 'XL',
+    XXL: 'XXL',
+  }
+
+  const handleAddProduct = async (product: IProduct) => {
+    try {
+      const mappedProduct = {
+        ...product,
+        size: sizeMapping[product.size] || product.size,
+      }
+      console.log('Product being sent to backend:', mappedProduct)
+      const newProduct = await addProduct(mappedProduct)
+      setProducts(prevProducts => [...prevProducts, newProduct])
+      setIsOverlayVisible(false)
+    } catch (err) {
+      console.error('Failed to add product:', err)
+    }
+  }
 
   return (
     <SectionContainer>
@@ -212,7 +257,10 @@ const WarehouseContainer: React.FC = (): React.ReactElement => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
       >
-        <ProductFilter number_of_products={28} title={'Warehouse'} />
+        <FilterHeader>
+          <Breadcrumb items={['Home', 'Warehouse']} activeIndex={0} />
+          <FilterTitle>{'Warehouse'}</FilterTitle>
+        </FilterHeader>
         <ProductsWithButtons>
           <ButtonsContainer>
             <ButtonsTitle>Products</ButtonsTitle>
@@ -286,9 +334,6 @@ const WarehouseContainer: React.FC = (): React.ReactElement => {
                           <ParameterText
                             isActive={selectedParameter === parameter}
                             onClick={() => handleParameterClick(parameter)}
-                            initial={{ opacity: 1 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.3 }}
                           >
                             {parameter}
                           </ParameterText>
@@ -299,119 +344,120 @@ const WarehouseContainer: React.FC = (): React.ReactElement => {
                 </TableRow>
               </TableHeader>
               <tbody>
-                {products.map((product, index) => (
-                  <TableRow
-                    key={product.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                  >
-                    <TableCell>
-                      <CheckboxContainer onClick={() => handleProductSelect(product.id)}>
-                        {selectedProducts[product.id] ? (
-                          <SVG.SelectedCheckbox color={colors.DARK_GREEN_2} />
-                        ) : (
-                          <SVG.UnSelectedCheckbox color={colors.LIGHT_GREY_300} />
-                        )}
-                      </CheckboxContainer>
-                    </TableCell>
-                    <TableCell>
-                      <ProductNameSection>
-                        <ProductImage src={product.image} alt={product.name} />
-                        {editing && selectedProducts[product.id] ? (
+                {Array.isArray(products) &&
+                  products.map((product, index) => (
+                    <TableRow
+                      key={product.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1, duration: 0.5 }}
+                    >
+                      <TableCell>
+                        <CheckboxContainer onClick={() => handleProductSelect(product.id || 0)}>
+                          {selectedProducts[product.id || 0] ? (
+                            <SVG.SelectedCheckbox color={colors.DARK_GREEN_2} />
+                          ) : (
+                            <SVG.UnSelectedCheckbox color={colors.LIGHT_GREY_300} />
+                          )}
+                        </CheckboxContainer>
+                      </TableCell>
+                      <TableCell>
+                        <ProductNameSection>
+                          <ProductImage src={getSrc(product.links[0])} alt={product.name} />;
+                          {editing && selectedProducts[product.id || 0] ? (
+                            <EditableInput
+                              type='text'
+                              defaultValue={product.name}
+                              onChange={e => handleInputChange(product.id || 0, 'name', e.target.value)}
+                              onKeyDown={e => handleKeyDown(e, product.id || 0)}
+                            />
+                          ) : (
+                            product.name
+                          )}
+                        </ProductNameSection>
+                      </TableCell>
+                      <TableCell>
+                        {editing && selectedProducts[product.id || 0] ? (
                           <EditableInput
-                            type='text'
-                            defaultValue={product.name}
-                            onChange={e => handleInputChange(product.id, 'name', e.target.value)}
-                            onKeyDown={e => handleKeyDown(e, product.id)}
+                            type='number'
+                            defaultValue={product.amount}
+                            onChange={e => handleInputChange(product.id || 0, 'amount', e.target.value)}
+                            onKeyDown={e => handleKeyDown(e, product.id || 0)}
                           />
                         ) : (
-                          product.name
+                          `${product.amount} in stock`
                         )}
-                      </ProductNameSection>
-                    </TableCell>
-                    <TableCell>
-                      {editing && selectedProducts[product.id] ? (
-                        <EditableInput
-                          type='text'
-                          defaultValue={product.inventory}
-                          onChange={e => handleInputChange(product.id, 'inventory', e.target.value)}
-                          onKeyDown={e => handleKeyDown(e, product.id)}
-                        />
-                      ) : (
-                        `${product.inventory} in stock`
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {editing && selectedProducts[product.id] ? (
-                        <EditableInput
-                          type='text'
-                          defaultValue={product.size}
-                          onChange={e => handleInputChange(product.id, 'size', e.target.value)}
-                          onKeyDown={e => handleKeyDown(e, product.id)}
-                        />
-                      ) : (
-                        product.size
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {editing && selectedProducts[product.id] ? (
-                        <EditableInput
-                          type='text'
-                          defaultValue={product.type}
-                          onChange={e => handleInputChange(product.id, 'type', e.target.value)}
-                          onKeyDown={e => handleKeyDown(e, product.id)}
-                        />
-                      ) : (
-                        product.type
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {editing && selectedProducts[product.id] ? (
-                        <EditableInput
-                          type='text'
-                          defaultValue={product.color}
-                          onChange={e => handleInputChange(product.id, 'color', e.target.value)}
-                          onKeyDown={e => handleKeyDown(e, product.id)}
-                        />
-                      ) : (
-                        product.color
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {editing && selectedProducts[product.id] ? (
-                        <EditableInput
-                          type='text'
-                          defaultValue={product.price}
-                          onChange={e => handleInputChange(product.id, 'price', e.target.value)}
-                          onKeyDown={e => handleKeyDown(e, product.id)}
-                        />
-                      ) : (
-                        renderPrice(product.price, product.discount)
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {editing && selectedProducts[product.id] ? (
-                        <EditableInput
-                          type='text'
-                          defaultValue={product.gender}
-                          onChange={e => handleInputChange(product.id, 'gender', e.target.value)}
-                          onKeyDown={e => handleKeyDown(e, product.id)}
-                        />
-                      ) : (
-                        product.gender
-                      )}
-                    </TableCell>
-                    <TableCell>{product.discount ? `${product.discount}%` : 'No discount'}</TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                      <TableCell>
+                        {editing && selectedProducts[product.id || 0] ? (
+                          <EditableInput
+                            type='text'
+                            defaultValue={product.size}
+                            onChange={e => handleInputChange(product.id || 0, 'size', e.target.value)}
+                            onKeyDown={e => handleKeyDown(e, product.id || 0)}
+                          />
+                        ) : (
+                          product.size
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {editing && selectedProducts[product.id || 0] ? (
+                          <EditableInput
+                            type='text'
+                            defaultValue={product.type.name}
+                            onChange={e => handleInputChange(product.id || 0, 'type', e.target.value)}
+                            onKeyDown={e => handleKeyDown(e, product.id || 0)}
+                          />
+                        ) : (
+                          product.type.name
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {editing && selectedProducts[product.id || 0] ? (
+                          <EditableInput
+                            type='text'
+                            defaultValue={product.color.name}
+                            onChange={e => handleInputChange(product.id || 0, 'color', e.target.value)}
+                            onKeyDown={e => handleKeyDown(e, product.id || 0)}
+                          />
+                        ) : (
+                          product.color.name
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {editing && selectedProducts[product.id || 0] ? (
+                          <EditableInput
+                            type='number'
+                            defaultValue={product.price}
+                            onChange={e => handleInputChange(product.id || 0, 'price', e.target.value)}
+                            onKeyDown={e => handleKeyDown(e, product.id || 0)}
+                          />
+                        ) : (
+                          renderPrice(product.price, product.discount)
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {editing && selectedProducts[product.id || 0] ? (
+                          <EditableInput
+                            type='text'
+                            defaultValue={product.gender}
+                            onChange={e => handleInputChange(product.id || 0, 'gender', e.target.value)}
+                            onKeyDown={e => handleKeyDown(e, product.id || 0)}
+                          />
+                        ) : (
+                          product.gender
+                        )}
+                      </TableCell>
+                      <TableCell>{product.discount ? `${product.discount}%` : 'No discount'}</TableCell>
+                    </TableRow>
+                  ))}
               </tbody>
             </ProductTableContainer>
           </TableWrapper>
         </ProductsWithButtons>
       </FilterWithProductsContainer>
 
-      {isOverlayVisible && <AddProductOverlay onClose={closeOverlay} />}
+      {isOverlayVisible && <AddProductOverlay onClose={closeOverlay} onAddProduct={handleAddProduct} />}
     </SectionContainer>
   )
 }

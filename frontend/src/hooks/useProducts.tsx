@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { IProduct } from '../models'
-import { useAuth } from '../context/AuthContext/AuthContext.tsx'
+import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
 
 const useNewProducts = () => {
   const [products, setProducts] = useState<IProduct[]>([])

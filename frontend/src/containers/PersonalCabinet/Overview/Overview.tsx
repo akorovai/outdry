@@ -22,13 +22,13 @@ import {
   StatusLabel,
   StatusText,
 } from '../Orders/Orders.styled'
-import { IAddressInfo, OrderResponse } from '@/models' // Import OrderResponse
+import { IAddressInfo, OrderResponse } from '@/models'
 
 interface OverviewProps {
   setActiveMenuOption: (option: string) => void
   addresses: IAddressInfo[]
-  orders: OrderResponse[] // Add orders prop
-  loading: boolean // Add loading prop
+  orders: OrderResponse[]
+  loading: boolean
 }
 
 const Overview: FC<OverviewProps> = ({ setActiveMenuOption, addresses, orders, loading }): ReactElement => {
