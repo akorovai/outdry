@@ -2,40 +2,40 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Breadcrumb, MainButton } from '@/components'
 import {
-  ProductPageContainer,
-  ProductImagesContainer,
-  MainImageSection,
-  MainProductImage,
-  SecondaryImagesSection,
-  SecondaryImagesRow,
-  SecondaryImage,
-  ProductDetailsContainer,
-  ProductDescriptionContainer,
-  DescriptionTextContainer,
-  ProductDescriptionText,
-  ProductDescriptionHeader,
-  ProductTitle,
   AdditionalProductInfoContainer,
-  ProductIDText,
-  ReviewsCountText,
+  ButtonContainer,
+  ButtonsContainer,
   ColorAndSizeOptionsContainer,
+  ColorCircle,
+  ColorCirclesContainer,
   ColorOptionsContainer,
   ColorOptionsTitle,
-  ColorCirclesContainer,
-  ColorCircle,
-  SizeOptionsContainer,
-  SizeOptionsTitle,
-  SizeOptionsList,
-  SizeOption,
-  PriceAndDiscountContainer,
-  DiscountTextContainer,
-  DiscountText,
-  PriceInfoContainer,
-  MainPriceText,
-  SeparatorPriceSymbol,
+  DescriptionTextContainer,
   DiscountNumber,
-  ButtonsContainer,
-  ButtonContainer,
+  DiscountText,
+  DiscountTextContainer,
+  MainImageSection,
+  MainPriceText,
+  MainProductImage,
+  PriceAndDiscountContainer,
+  PriceInfoContainer,
+  ProductDescriptionContainer,
+  ProductDescriptionHeader,
+  ProductDescriptionText,
+  ProductDetailsContainer,
+  ProductIDText,
+  ProductImagesContainer,
+  ProductPageContainer,
+  ProductTitle,
+  ReviewsCountText,
+  SecondaryImage,
+  SecondaryImagesRow,
+  SecondaryImagesSection,
+  SeparatorPriceSymbol,
+  SizeOption,
+  SizeOptionsContainer,
+  SizeOptionsList,
+  SizeOptionsTitle,
 } from './ProductDescription.styled'
 import { colors } from '@/consts'
 import { ColorResponse } from '@/models'
@@ -46,6 +46,7 @@ import useAddToCart from '@/hooks/useCart'
 interface IProductDescriptionProps {
   messagesNumber: number
 }
+
 const ProductDescription: React.FC<IProductDescriptionProps> = ({ messagesNumber }) => {
   const { category, id } = useParams<{ category: string; id: string }>()
   const [selectedColor, setSelectedColor] = useState<ColorResponse | null>(null)
@@ -133,14 +134,15 @@ const ProductDescription: React.FC<IProductDescriptionProps> = ({ messagesNumber
         <ProductImagesContainer>
           <Breadcrumb items={['Home', title, `${product.type.name}`]} activeIndex={1} />
           <MainProductImage
+            imageUrl={product.links[0]}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           />
           <SecondaryImagesSection>
             <SecondaryImagesRow>
-              <SecondaryImage />
-              <SecondaryImage />
+              <SecondaryImage imageUrl={product.links[1]} />
+              <SecondaryImage imageUrl={product.links[2]} />
             </SecondaryImagesRow>
           </SecondaryImagesSection>
         </ProductImagesContainer>

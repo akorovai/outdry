@@ -3,10 +3,9 @@ import { useLocation, useParams } from 'react-router-dom'
 import { Footer, Navbar, ProductFilter, ProductsList, Promotions, WhyChooseOutdry } from '@/components'
 import { MainTitleText } from '../HomePage/HomePage.styled.tsx'
 import { FilterWithProductsContainer, PageContainer } from './ProductsPage.styled'
-
 import { IProduct } from '@/models'
-
 import useCategoryProducts from './useNewProducts.tsx'
+import EmptyProductList from './EmptyProductList' // Import the new component
 
 const ProductsPage: FC = () => {
   const { category } = useParams<{ category: string }>()
@@ -41,18 +40,25 @@ const ProductsPage: FC = () => {
     prices: string[]
   }) => {
     const filtered = allProducts.filter(product => {
+      const discount = product.discount || 0
+      const discountedPrice = product.price * (1 - discount / 100)
+
+      const isPriceInRange =
+        filters.prices.length === 0 ||
+        filters.prices.some((price: string) => {
+          const [min, max] = price.replace('$', '').split('-').map(Number)
+          return discountedPrice >= min && discountedPrice <= max
+        })
+
       return (
         (filters.sizes.length === 0 || filters.sizes.includes(product.size)) &&
         (filters.productTypes.length === 0 || filters.productTypes.includes(product.type.name)) &&
         (filters.colors.length === 0 || filters.colors.includes(product.color.name)) &&
         (filters.genders.length === 0 || filters.genders.includes(product.gender)) &&
-        (filters.prices.length === 0 ||
-          filters.prices.some((price: string) => {
-            const [min, max] = price.replace('$', '').split('-').map(Number)
-            return product.price >= min && product.price <= max
-          }))
+        isPriceInRange
       )
     })
+
     setFilteredProducts(filtered)
     setCurrentPage(1)
   }
@@ -126,17 +132,21 @@ const ProductsPage: FC = () => {
           genders={genders}
           prices={prices}
         />
-        <ProductsList
-          isWishList={false}
-          products={currentProducts}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPreviousClick={handlePreviousClick}
-          onNextClick={handleNextClick}
-          onDeleteItem={itemId => {
-            console.log('Deleting item with ID:', itemId)
-          }}
-        />
+        {filteredProducts.length === 0 ? (
+          <EmptyProductList />
+        ) : (
+          <ProductsList
+            isWishList={false}
+            products={currentProducts}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPreviousClick={handlePreviousClick}
+            onNextClick={handleNextClick}
+            onDeleteItem={itemId => {
+              console.log('Deleting item with ID:', itemId)
+            }}
+          />
+        )}
       </FilterWithProductsContainer>
       <Promotions isOnSale={true}>
         <MainTitleText>Favorable offers</MainTitleText>

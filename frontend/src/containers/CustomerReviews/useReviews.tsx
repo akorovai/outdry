@@ -18,7 +18,7 @@ const useReviews = (productId: number) => {
   const [reviews, setReviews] = useState<IReview[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const { token, BASE_URL } = useAuth()
+  const { token } = useAuth()
 
   const fetchReviews = async () => {
     if (loading) return
@@ -27,7 +27,7 @@ const useReviews = (productId: number) => {
     setError(null)
 
     try {
-      const response = await api.get<ResponseRecord>(`${BASE_URL}/api/reviews/product/${productId}`, {
+      const response = await api.get<ResponseRecord>(`/api/reviews/product/${productId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -56,7 +56,7 @@ const useReviews = (productId: number) => {
     setError(null)
 
     try {
-      const response = await api.post<ResponseRecord>('${BASE_URL}/api/reviews', reviewData, {
+      const response = await api.post<ResponseRecord>('/api/reviews', reviewData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

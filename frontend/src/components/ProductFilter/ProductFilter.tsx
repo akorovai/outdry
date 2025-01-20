@@ -74,11 +74,11 @@ const ProductFilter: React.FC<IProductFilterProps> = ({
     setSelected(newSelected)
 
     onFilterChange({
-      sizes: selectedSizes,
-      productTypes: selectedProductTypes,
-      colors: selectedColors,
-      genders: selectedGenders,
-      prices: selectedPrices,
+      sizes: selected === selectedSizes ? newSelected : selectedSizes,
+      productTypes: selected === selectedProductTypes ? newSelected : selectedProductTypes,
+      colors: selected === selectedColors ? newSelected : selectedColors,
+      genders: selected === selectedGenders ? newSelected : selectedGenders,
+      prices: selected === selectedPrices ? newSelected : selectedPrices,
     })
   }
 

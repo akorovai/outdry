@@ -46,22 +46,50 @@ public class ProductService {
 	public ProductResponse addProduct(ProductRequest productRequest) {
 		log.info("Attempting to add a new product with name: {}", productRequest.getName());
 
-		Color color = colorRepository.findByNameAndCode(productRequest.getColor().getName(), productRequest.getColor().getCode())
-				              .orElseGet(() -> colorRepository.save(
-						              Color.builder()
-								              .name(productRequest.getColor().getName())
-								              .code(productRequest.getColor().getCode())
-								              .build()
-				              ));
+		log.debug("Processing color with name: {} and code: {}",
+				productRequest.getColor().getName(),
+				productRequest.getColor().getCode());
 
+		Color color = colorRepository.findByNameAndCode(productRequest.getColor().getName(), productRequest.getColor().getCode())
+				              .orElseGet(() -> {
+					              log.info("Color not found, creating a new color with name: {} and code: {}",
+							              productRequest.getColor().getName(),
+							              productRequest.getColor().getCode());
+					              return colorRepository.save(
+							              Color.builder()
+									              .name(productRequest.getColor().getName())
+									              .code(productRequest.getColor().getCode())
+									              .build()
+					              );
+				              });
+
+		log.debug("Color processed with ID: {}", color.getId());
+
+
+		log.debug("Processing type with name: {}", productRequest.getType().getName());
 
 		Type type = typeRepository.findByName(productRequest.getType().getName())
-				            .orElseGet(() -> typeRepository.save(
-						            Type.builder()
-								            .name(productRequest.getType().getName())
-								            .build()
-				            ));
+				            .orElseGet(() -> {
+					            log.info("Type not found, creating a new type with name: {}",
+							            productRequest.getType().getName());
+					            return typeRepository.save(
+							            Type.builder()
+									            .name(productRequest.getType().getName())
+									            .build()
+					            );
+				            });
 
+		log.debug("Type processed with ID: {}", type.getId());
+
+
+		log.debug("Building product with name: {}, description: {}, price: {}, amount: {}, discount: {}, size: {}, gender: {}",
+				productRequest.getName(),
+				productRequest.getDescription(),
+				productRequest.getPrice(),
+				productRequest.getAmount(),
+				productRequest.getDiscount(),
+				productRequest.getSize(),
+				productRequest.getGender());
 
 		Product product = Product.builder()
 				                  .name(productRequest.getName())
@@ -74,33 +102,39 @@ public class ProductService {
 				                  .links(productRequest.getLinks() != null ? productRequest.getLinks() : new String[]{})
 				                  .color(color)
 				                  .type(type)
-				                  .id(ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE))
 				                  .build();
 
+		log.info("Saving product to the repository...");
 		Product savedProduct = productRepository.save(product);
+		log.info("Product with ID: {} successfully saved", savedProduct.getId());
 
-		log.info("Product with ID: {} successfully added", savedProduct.getId());
 
-		return ProductResponse.builder()
-				       .id(savedProduct.getId())
-				       .name(savedProduct.getName())
-				       .description(savedProduct.getDescription())
-				       .price(savedProduct.getPrice())
-				       .amount(savedProduct.getAmount())
-				       .discount(savedProduct.getDiscount())
-				       .size(savedProduct.getSize())
-				       .gender(savedProduct.getGender())
-				       .links(savedProduct.getLinks())
-				       .color(ColorResponse.builder()
-						              .id(savedProduct.getColor().getId())
-						              .name(savedProduct.getColor().getName())
-						              .code(savedProduct.getColor().getCode())
-						              .build())
-				       .type(TypeResponse.builder()
-						             .id(savedProduct.getType().getId())
-						             .name(savedProduct.getType().getName())
-						             .build())
-				       .build();
+		log.debug("Building response for product with ID: {}", savedProduct.getId());
+
+		ProductResponse response = ProductResponse.builder()
+				                           .id(savedProduct.getId())
+				                           .name(savedProduct.getName())
+				                           .description(savedProduct.getDescription())
+				                           .price(savedProduct.getPrice())
+				                           .amount(savedProduct.getAmount())
+				                           .discount(savedProduct.getDiscount())
+				                           .size(savedProduct.getSize())
+				                           .gender(savedProduct.getGender())
+				                           .links(savedProduct.getLinks())
+				                           .color(ColorResponse.builder()
+						                                  .id(savedProduct.getColor().getId())
+						                                  .name(savedProduct.getColor().getName())
+						                                  .code(savedProduct.getColor().getCode())
+						                                  .build())
+				                           .type(TypeResponse.builder()
+						                                 .id(savedProduct.getType().getId())
+						                                 .name(savedProduct.getType().getName())
+						                                 .build())
+				                           .build();
+
+		log.info("Product with ID: {} successfully added and response returned", savedProduct.getId());
+
+		return response;
 	}
 
 	@Transactional
@@ -135,7 +169,7 @@ public class ProductService {
 		product.setDiscount(productRequest.getDiscount());
 		product.setSize(productRequest.getSize());
 		product.setGender(productRequest.getGender());
-		product.setLinks(productRequest.getLinks() != null ? productRequest.getLinks() : new String[]{});
+		product.setLinks( productRequest.getLinks());
 		product.setColor(color);
 		product.setType(type);
 

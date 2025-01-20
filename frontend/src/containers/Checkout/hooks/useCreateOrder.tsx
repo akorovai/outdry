@@ -31,7 +31,7 @@ const useCreateOrder = () => {
     setError(null)
 
     try {
-      const response = await fetch(`${BASE_URL}api/orders`, {
+      const response = await fetch(`${BASE_URL}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

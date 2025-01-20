@@ -32,12 +32,12 @@ export const useProductApi = () => {
       }
 
       if (files.length > 0) {
-        const uploadedLinks = await uploadProductLinks(productId, files as File[])
-        console.log('Links uploaded successfully:', uploadedLinks)
+        const uploadedLinksResponse = await uploadProductLinks(productId, files as File[])
+        console.log('Links uploaded successfully:', uploadedLinksResponse)
 
         const updatedProductResponse = await api.put(`${BASE_URL}/api/products/${productId}`, {
           ...product,
-          links: uploadedLinks,
+          links: uploadedLinksResponse,
           id: productId,
         })
 
@@ -78,7 +78,7 @@ export const useProductApi = () => {
         },
       })
 
-      return response.data.urls
+      return response.data.message
     } catch (error) {
       console.error('Error uploading links:', error)
       throw error

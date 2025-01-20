@@ -60,7 +60,7 @@ const Overview: FC<OverviewProps> = ({ setActiveMenuOption, addresses, orders, l
           mostRecentOrder && (
             <OrderItem>
               <OrderItemLeft>
-                <OrderImage src='https://via.placeholder.com/106' alt='Order' />
+                <OrderImage src={mostRecentOrder.orderItems[0].imageLink} alt='Order' />
                 <LeftOrderInfo>
                   <DateText>{new Date(mostRecentOrder.createdAt).toLocaleDateString()}</DateText>
                   <NumberOfItemsText>{mostRecentOrder.orderItems.length} items</NumberOfItemsText>

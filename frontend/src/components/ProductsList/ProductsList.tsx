@@ -45,6 +45,7 @@ const ProductsList: FC<IProductListProps> = ({
               discountPercent={product.discount}
               category={product.gender.toLowerCase()}
               onTrashClick={() => onDeleteItem(product.id || -1)}
+              imageUrl={product.links[0] as string}
             />
           )
         })}

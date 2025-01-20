@@ -7,9 +7,6 @@ import {
   CategoryText,
   NavbarCategoriesContainer,
   NavbarContainer,
-  SearchIconWrapper,
-  SearchInput,
-  SearchInputField,
   UserMenu,
   UserOptionLink,
   UsersOptions,
@@ -23,7 +20,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isMinimal = false }): React.ReactElement => {
-  const [searchValue, setSearchValue] = useState('')
+  // const [searchValue, setSearchValue] = useState('')
   const [isCartOverlayOpen, setIsCartOverlayOpen] = useState(false)
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -42,15 +39,15 @@ const Navbar: React.FC<NavbarProps> = ({ isMinimal = false }): React.ReactElemen
     }
   }, [isCartOverlayOpen])
 
-  const handleClearSearch = () => {
-    setSearchValue('')
-  }
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      console.log('Search for:', searchValue)
-    }
-  }
+  // const handleClearSearch = () => {
+  //   setSearchValue('')
+  // }
+  //
+  // const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (event.key === 'Enter') {
+  //     console.log('Search for:', searchValue)
+  //   }
+  // }
 
   const handleLogoClick = () => {
     navigate('/')
@@ -87,19 +84,19 @@ const Navbar: React.FC<NavbarProps> = ({ isMinimal = false }): React.ReactElemen
         <UserMenu>
           {!isMinimal ? (
             <>
-              <SearchInputField>
-                <SearchInput
-                  type='search'
-                  placeholder='Search'
-                  aria-label='Search'
-                  value={searchValue}
-                  onChange={e => setSearchValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                />
-                <SearchIconWrapper onClick={handleClearSearch}>
-                  {searchValue ? <SVG.Cross color={colors.BLACK} /> : <SVG.Search color={colors.BLACK} />}
-                </SearchIconWrapper>
-              </SearchInputField>
+              {/*<SearchInputField>*/}
+              {/*  <SearchInput*/}
+              {/*    type='search'*/}
+              {/*    placeholder='Search'*/}
+              {/*    aria-label='Search'*/}
+              {/*    value={searchValue}*/}
+              {/*    onChange={e => setSearchValue(e.target.value)}*/}
+              {/*    onKeyDown={handleKeyDown}*/}
+              {/*  />*/}
+              {/*  <SearchIconWrapper onClick={handleClearSearch}>*/}
+              {/*    {searchValue ? <SVG.Cross color={colors.BLACK} /> : <SVG.Search color={colors.BLACK} />}*/}
+              {/*  </SearchIconWrapper>*/}
+              {/*</SearchInputField>*/}
               <UsersOptions>
                 <UserOptionLink to={routePath.WISHLIST}>
                   <SVG.Like color={colors.WHITE} />

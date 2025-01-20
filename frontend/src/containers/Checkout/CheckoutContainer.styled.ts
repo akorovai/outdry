@@ -67,14 +67,35 @@ export const ProductsContainer = styled(motion.div)`
   ${flexColumn};
   gap: 1rem;
   align-self: stretch;
+  height: 100%;
 `
 
 export const ProductItemsList = styled(motion.div)`
   ${flexColumn};
   gap: 1rem;
   align-self: stretch;
-`
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
 
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: ${colors.LIGHT_GREY_300};
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${colors.LIGHT_GREY_600};
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${colors.LIGHT_GREY_700};
+  }
+`
 export const ProductItem = styled(motion.div)`
   ${flexRow};
   justify-content: space-between;

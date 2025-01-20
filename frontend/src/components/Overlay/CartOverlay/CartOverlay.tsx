@@ -50,9 +50,13 @@ export const CartOverlay: React.FC<CartOverlayProps> = ({ onClose }) => {
   )
 
   const calculateSubtotal = useCallback(() => {
-    return cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0)
+    return cartItems.reduce((total, item) => {
+      const originalPrice = item.product.price
+      const discount = item.product.discount || 0
+      const discountedPrice = originalPrice * (1 - discount / 100)
+      return total + discountedPrice * item.quantity
+    }, 0)
   }, [cartItems])
-
   const handleCheckoutButton = useCallback(() => {
     navigate(routePath.CHECKOUT)
   }, [navigate])

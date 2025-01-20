@@ -35,6 +35,7 @@ interface Product {
   quantity: number
   image: string
   variant?: string
+  discount?: number
 }
 
 const containerVariants = {
@@ -77,9 +78,15 @@ const CheckoutContainer: FC = (): ReactElement => {
     quantity: item.quantity,
     image: item.product.imageUrl,
     variant: `${item.product.color}/${item.product.size}`,
+    discount: item.product.discount || 0,
   }))
 
-  const subtotal = products.reduce((total, product) => total + product.price * product.quantity, 0)
+  const subtotal = products.reduce((total, product) => {
+    const originalPrice = product.price
+    const discount = product.discount || 0
+    const discountedPrice = originalPrice * (1 - discount / 100)
+    return total + discountedPrice * product.quantity
+  }, 0)
 
   const shippingCost =
     selectedShippingMethod === 'Standard Shipping' ? 0 : selectedShippingMethod === 'Expedited Shipping' ? 12.99 : 24.99

@@ -148,13 +148,14 @@ const Promotions: FC<IPromotionPropsWithChildrenProps> = ({ children, isOnSale, 
             transition={{ duration: 0.5, delay: index * 0.1 }}
           >
             <ProductCard
-              id={product.id}
+              id={product.id!}
               name={product.name}
               colors={[product.color.name]}
               price={product.price}
               isOnSale={isOnSale}
               discountPercent={product.discount}
               category={product.gender.toLowerCase()}
+              imageUrl={product.links[0] as string}
             />
           </motion.div>
         ))}

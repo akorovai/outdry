@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import { motion } from 'framer-motion' // Import framer-motion
 import { colors, fonts } from '../../consts'
 
-// Wrap your components with `motion` for animations
 export const ProductPageContainer = styled(motion.section)`
   display: flex;
   padding: 50px 100px 100px 100px;
@@ -11,12 +10,17 @@ export const ProductPageContainer = styled(motion.section)`
   align-self: stretch;
 `
 
-export const ProductImagesContainer = styled(motion.article)`
+// export const ProductImagesContainer = styled(motion.article)`
+//   display: flex;
+//   width: 830px;
+//   flex-direction: column;
+//   align-items: flex-start;
+//   gap: 8px;
+// `
+export const ProductImagesContainer = styled(motion.div)`
   display: flex;
-  width: 830px;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
+  gap: 16px;
 `
 
 export const MainImageSection = styled(motion.section)`
@@ -27,11 +31,14 @@ export const MainImageSection = styled(motion.section)`
   align-self: stretch;
 `
 
-export const MainProductImage = styled(motion.figure)`
+export const MainProductImage = styled(motion.figure)<{ imageUrl: string }>`
   height: 600px;
   align-self: stretch;
   background-color: #f0f0f0;
   margin: 0;
+  background-image: url(${props => props.imageUrl});
+  background-size: cover;
+  background-position: center;
 `
 
 export const SecondaryImagesSection = styled(motion.section)`
@@ -50,7 +57,7 @@ export const SecondaryImagesRow = styled(motion.div)`
   align-self: stretch;
 `
 
-export const SecondaryImage = styled(motion.figure)`
+export const SecondaryImage = styled(motion.figure)<{ imageUrl: string }>`
   display: flex;
   width: 409px;
   height: 500px;
@@ -59,6 +66,9 @@ export const SecondaryImage = styled(motion.figure)`
   align-items: center;
   background-color: #e0e0e0;
   margin: 0;
+  background-image: url(${props => props.imageUrl});
+  background-size: cover;
+  background-position: center;
 `
 
 export const ProductDetailsContainer = styled(motion.div)`

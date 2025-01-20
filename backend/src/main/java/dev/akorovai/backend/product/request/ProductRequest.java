@@ -17,7 +17,7 @@ import lombok.Getter;
 @Builder
 public class ProductRequest {
 
-	private Long id;
+//	private Long id;
 	private String name;
 	private String description;
 	private String[] links;

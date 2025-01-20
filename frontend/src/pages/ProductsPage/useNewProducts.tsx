@@ -22,8 +22,11 @@ const useCategoryProducts = (category: string) => {
       case 'women':
         endpoint = `${BASE_URL}/api/products/gender/WOMEN`
         break
-      case 'kids':
-        endpoint = `${BASE_URL}/api/products/gender/KIDS`
+      case 'boys':
+        endpoint = `${BASE_URL}/api/products/gender/boys`
+        break
+      case 'girls':
+        endpoint = `${BASE_URL}/api/products/gender/girls`
         break
       case 'accessories':
         endpoint = `${BASE_URL}/api/products/type/ACCESSORIES`

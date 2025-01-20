@@ -27,9 +27,10 @@ interface IProductCardProps {
   isOnSale?: boolean
   isWishlist?: boolean
   onQuickBuyClick?: () => void
-  onTrashClick?: () => void // Добавьте этот пропс
+  onTrashClick?: () => void
   discountPercent?: number
   category: string
+  imageUrl: string
 }
 
 const ProductCard: FC<IProductCardProps> = ({
@@ -45,6 +46,7 @@ const ProductCard: FC<IProductCardProps> = ({
   onTrashClick,
   discountPercent,
   category,
+  imageUrl,
 }): ReactElement => {
   const { addToCart, loading, error } = useCart()
   const navigate = useNavigate()
@@ -71,7 +73,7 @@ const ProductCard: FC<IProductCardProps> = ({
     if (!isOnSale && !isWishlist) return null
     return (
       <SaleLabel
-        onClick={isWishlist ? handleTrashClick : undefined} // Добавьте обработчик удаления
+        onClick={isWishlist ? handleTrashClick : undefined}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
@@ -110,7 +112,7 @@ const ProductCard: FC<IProductCardProps> = ({
 
   return (
     <ProductCardContainer onClick={handleCardClick} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-      <ProductImageContainer>
+      <ProductImageContainer imageUrl={imageUrl}>
         {renderSaleLabel()}
         <AddToCartButton
           onClick={handleAddToCart}

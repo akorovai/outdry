@@ -22,8 +22,8 @@ import { OrderOverlay } from '@/components/Overlay'
 import { OrderResponse } from '@/models'
 
 interface OrdersProps {
-  orders: OrderResponse[] // Receive orders as a prop
-  loading: boolean // Receive loading state as a prop
+  orders: OrderResponse[]
+  loading: boolean
 }
 
 const Orders: React.FC<OrdersProps> = ({ orders, loading }): React.ReactElement => {
@@ -55,7 +55,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, loading }): React.ReactElement 
             orders.map((order, index) => (
               <OrderItem key={order.id} style={{ animationDelay: `${index * 0.1}s` }}>
                 <OrderItemLeft>
-                  <OrderImage src='https://via.placeholder.com/106' alt='Order' />
+                  <OrderImage src={order.orderItems[0].imageLink} alt='Order' />
                   <LeftOrderInfo>
                     <DateText>{new Date(order.createdAt).toLocaleDateString()}</DateText>
                     <NumberOfItemsText>{order.orderItems.length} items</NumberOfItemsText>
