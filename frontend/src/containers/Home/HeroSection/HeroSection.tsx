@@ -1,5 +1,5 @@
-import React from 'react'
-
+import { FC } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   AlmostContainer,
   AlmostText,
@@ -11,11 +11,11 @@ import {
   SectionContainer,
   TextWrapper,
 } from './HeroSection.styled.ts'
-import { MainButton, SVG } from '../../../components'
-import { useNavigate } from 'react-router-dom'
-import routePath from '../../../consts/routePath.ts'
+import { MainButton, SVG } from '@/components'
 
-const HeroSection: React.FC = (): React.ReactElement => {
+import routePath from '@/consts/routePath.ts'
+
+const HeroSection: FC = () => {
   const navigate = useNavigate()
   const handleStartShoppingButton = () => navigate(routePath.PRODUCTS.replace(':category', 'new-in'))
   return (

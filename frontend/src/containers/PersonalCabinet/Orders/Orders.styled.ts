@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components'
-import { colors, fonts } from '../../../consts'
+import { colors, fonts } from '@/consts'
 
 const fadeIn = keyframes`
     from { opacity: 0; transform: translateY(20px); }

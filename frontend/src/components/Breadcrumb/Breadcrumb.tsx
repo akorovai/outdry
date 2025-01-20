@@ -5,7 +5,7 @@ import { colors } from '../../consts'
 
 interface BreadcrumbProps {
   items?: string[]
-  activeIndex?: number // Новый проп для управления активными элементами
+  activeIndex?: number
 }
 
 const Breadcrumb: FC<BreadcrumbProps> = ({ items = [], activeIndex = items.length - 1 }) => {

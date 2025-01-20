@@ -17,7 +17,6 @@ import routePath from '../../consts/routePath.ts'
 const Footer: React.FC = (): React.ReactElement => {
   const navigate = useNavigate()
 
-  // Map link names to their corresponding routes
   const handleLinkClick = (linkName: string) => {
     console.log(`Clicked on: ${linkName}`)
 

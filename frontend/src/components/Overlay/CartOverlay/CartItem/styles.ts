@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components'
-import { colors, fonts } from '../../../../consts'
+import { colors, fonts } from '@/consts'
 import { motion } from 'framer-motion'
 
 const scaleUp = keyframes`
@@ -181,7 +181,7 @@ export const AmountContainer = styled.div`
   gap: 16px;
   border: 1px solid ${colors.LIGHT_GREY_300};
   background: ${colors.WHITE};
-  animation: ${scaleUp} 0.3s ease-in-out 0.2s; // Apply scale-up animation with delay
+  animation: ${scaleUp} 0.3s ease-in-out 0.2s;
 `
 
 export const AmountText = styled.p`

@@ -284,7 +284,7 @@ export const AddImageContainer = styled(motion.div)`
   border: 1px solid ${colors.LIGHT_GREY_200};
   background: ${colors.LIGHT_GREY_300};
   box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-  margin-bottom: 1rem; /* Add margin to separate from UploadedImagesContainer */
+  margin-bottom: 1rem;
 
   @media (max-width: 768px) {
     height: 20rem;

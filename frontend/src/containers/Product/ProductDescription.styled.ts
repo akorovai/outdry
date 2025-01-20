@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { motion } from 'framer-motion' // Import framer-motion
+import { motion } from 'framer-motion'
 import { colors, fonts } from '../../consts'
 
 export const ProductPageContainer = styled(motion.section)`
@@ -10,13 +10,6 @@ export const ProductPageContainer = styled(motion.section)`
   align-self: stretch;
 `
 
-// export const ProductImagesContainer = styled(motion.article)`
-//   display: flex;
-//   width: 830px;
-//   flex-direction: column;
-//   align-items: flex-start;
-//   gap: 8px;
-// `
 export const ProductImagesContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios' // Import Axios
+import axios from 'axios'
 import { IProduct } from '@/models'
 import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
 
@@ -12,10 +12,9 @@ const useDiscountedProducts = () => {
   useEffect(() => {
     const fetchDiscountedProducts = async () => {
       try {
-        // Use Axios directly with the token in the headers
         const response = await axios.get(`${BASE_URL}/api/products/discounted`, {
           headers: {
-            Authorization: `Bearer ${token}`, // Add the token to the request headers
+            Authorization: `Bearer ${token}`,
           },
         })
 
@@ -36,7 +35,7 @@ const useDiscountedProducts = () => {
     }
 
     fetchDiscountedProducts()
-  }, [token]) // Re-fetch when the token changes
+  }, [token])
 
   return { products, loading, error }
 }

@@ -11,7 +11,7 @@ import {
 interface ShippingMethodProps {
   selectedShippingMethod: string
   onSelectShippingMethod: (method: string) => void
-  disabled?: boolean // Новый пропс для отключения
+  disabled?: boolean
 }
 
 export const ShippingMethod: FC<ShippingMethodProps> = ({

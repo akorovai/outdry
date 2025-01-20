@@ -75,7 +75,7 @@ interface FunctionButtonProps {
   icon?: React.ReactNode
   backgroundColor?: string
   textColor?: string
-  onClick?: (value?: number) => void // Updated to accept a value
+  onClick?: (value?: number) => void
   expandable?: boolean
 }
 
@@ -92,33 +92,33 @@ const FunctionButton: React.FC<FunctionButtonProps> = ({
 
   const handleClick = () => {
     if (expandable) {
-      setIsExpanded(true) // Expand the button to show the input field
+      setIsExpanded(true)
     } else {
-      onClick?.() // Call the onClick handler without a value
+      onClick?.()
     }
   }
 
   const handleInputBlur = () => {
-    setIsExpanded(false) // Collapse the button
-    const discount = parseFloat(inputValue) // Parse the input value
+    setIsExpanded(false)
+    const discount = parseFloat(inputValue)
     if (!isNaN(discount)) {
-      onClick?.(discount) // Pass the discount value to the onClick handler
+      onClick?.(discount)
     }
-    setInputValue('') // Clear the input field
+    setInputValue('')
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value) // Update the input value
+    setInputValue(e.target.value)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      const discount = parseFloat(inputValue) // Parse the input value
+      const discount = parseFloat(inputValue)
       if (!isNaN(discount)) {
-        onClick?.(discount) // Pass the discount value to the onClick handler
+        onClick?.(discount)
       }
-      setIsExpanded(false) // Collapse the button
-      setInputValue('') // Clear the input field
+      setIsExpanded(false)
+      setInputValue('')
     }
   }
 
@@ -128,7 +128,7 @@ const FunctionButton: React.FC<FunctionButtonProps> = ({
       onClick={handleClick}
       initial={{ width: 'auto' }}
       animate={{
-        width: isExpanded ? '250px' : 'auto', // Expand/collapse animation
+        width: isExpanded ? '250px' : 'auto',
       }}
       transition={{ duration: 0.3 }}
     >

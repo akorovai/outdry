@@ -14,7 +14,7 @@ const hoverScale = keyframes`
 
 export const NavbarContainer = styled.div`
   display: flex;
-  padding: 24px 5%; // Use percentage for padding to make it responsive
+  padding: 24px 5%;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
@@ -22,9 +22,9 @@ export const NavbarContainer = styled.div`
   animation: ${fadeIn} 0.5s ease;
 
   @media (max-width: 768px) {
-    padding: 16px 5%; // Adjust padding for smaller screens
-    flex-direction: column; // Stack elements vertically on small screens
-    gap: 16px; // Add gap between stacked elements
+    padding: 16px 5%;
+    flex-direction: column;
+    gap: 16px;
   }
 `
 
@@ -34,8 +34,8 @@ export const NavbarCategoriesContainer = styled.div`
   gap: 28px;
 
   @media (max-width: 768px) {
-    gap: 16px; // Reduce gap for smaller screens
-    flex-direction: column; // Stack elements vertically on small screens
+    gap: 16px;
+    flex-direction: column;
   }
 `
 
@@ -45,9 +45,9 @@ export const CategoriesMenu = styled.div`
   gap: 20px;
 
   @media (max-width: 768px) {
-    gap: 10px; // Reduce gap for smaller screens
-    flex-wrap: wrap; // Allow categories to wrap on smaller screens
-    justify-content: center; // Center-align categories
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 `
 
@@ -55,7 +55,7 @@ export const CategoryText = styled(Link)`
   display: block;
   color: ${colors.WHITE};
   font-family: ${fonts.POPPINS};
-  font-size: 1rem; // Use rem for scalability
+  font-size: 1rem;
   font-weight: 400;
   line-height: 28px;
   text-decoration: none;
@@ -68,7 +68,7 @@ export const CategoryText = styled(Link)`
   }
 
   @media (max-width: 768px) {
-    font-size: 0.875rem; // Reduce font size for smaller screens
+    font-size: 0.875rem;
   }
 `
 
@@ -78,7 +78,7 @@ export const UserMenu = styled.div`
   gap: 50px;
 
   @media (max-width: 768px) {
-    gap: 20px; // Reduce gap for smaller screens
+    gap: 20px;
   }
 `
 
@@ -88,14 +88,14 @@ export const UsersOptions = styled.div`
   gap: 10px;
 
   @media (max-width: 768px) {
-    gap: 8px; // Reduce gap for smaller screens
+    gap: 8px;
   }
 `
 
 export const SearchInputField = styled.div`
   display: flex;
-  width: 100%; // Make the search input field responsive
-  max-width: 380px; // Set a max-width for larger screens
+  width: 100%;
+  max-width: 380px;
   padding: 4px 8px;
   align-items: center;
   background: ${colors.WHITE};
@@ -104,7 +104,7 @@ export const SearchInputField = styled.div`
   position: relative;
 
   @media (max-width: 768px) {
-    max-width: 100%; // Allow the search input to take full width on smaller screens
+    max-width: 100%;
   }
 `
 
@@ -112,7 +112,7 @@ export const SearchInput = styled.input`
   border: none;
   background: transparent;
   outline: none;
-  font-size: 1rem; // Use rem for scalability
+  font-size: 1rem;
   color: ${colors.BLACK};
   font-family: ${fonts.POPPINS};
 
@@ -132,7 +132,7 @@ export const SearchInput = styled.input`
   }
 
   @media (max-width: 768px) {
-    font-size: 0.875rem; // Reduce font size for smaller screens
+    font-size: 0.875rem;
   }
 `
 
@@ -140,7 +140,7 @@ export const UserOptionLink = styled(Link)`
   display: flex;
   align-items: center;
   color: ${colors.WHITE};
-  font-size: 1.5rem; // Размер текста (если есть)
+  font-size: 1.5rem;
   cursor: pointer;
   text-decoration: none;
   transition: color 0.3s ease;
