@@ -22,7 +22,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     private final AzureService azureService;
-    // this one
+
     @PostMapping
     public ResponseEntity<ResponseRecord> addProduct(@RequestBody ProductRequest productRequest) {
         ProductResponse response = productService.addProduct(productRequest);
@@ -44,7 +44,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseRecord);
     }
 
-    // this one
+
     @PutMapping("/{productId}")
     public ResponseEntity<ResponseRecord> modifyProduct(
             @PathVariable long productId,
@@ -56,7 +56,7 @@ public class ProductController {
                                                 .build();
         return ResponseEntity.ok(responseRecord);
     }
-    // this one
+
     @DeleteMapping("/{productId}")
     public ResponseEntity<ResponseRecord> deleteProduct(@PathVariable long productId) {
         productService.deleteProduct(productId);
@@ -66,7 +66,7 @@ public class ProductController {
                                                 .build();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(responseRecord);
     }
-    // this one
+
     @PostMapping("/{productId}/discount")
     public ResponseEntity<ResponseRecord> addDiscount(
             @PathVariable long productId,

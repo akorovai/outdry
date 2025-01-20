@@ -12,7 +12,7 @@ public class StringArrayType implements UserType<String[]> {
 
     @Override
     public int getSqlType() {
-        return Types.ARRAY; // Maps to SQL ARRAY type
+        return Types.ARRAY;
     }
 
     @Override

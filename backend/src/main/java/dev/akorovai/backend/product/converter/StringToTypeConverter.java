@@ -1,5 +1,7 @@
-package dev.akorovai.backend.type;
+package dev.akorovai.backend.product.converter;
 
+import dev.akorovai.backend.type.Type;
+import dev.akorovai.backend.type.TypeRepository;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

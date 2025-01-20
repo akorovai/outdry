@@ -2,7 +2,7 @@ package dev.akorovai.backend.config;
 
 import dev.akorovai.backend.product.converter.StringToColorConverter;
 import dev.akorovai.backend.product.converter.StringToGenderConverter;
-import dev.akorovai.backend.type.StringToTypeConverter;
+import dev.akorovai.backend.product.converter.StringToTypeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
