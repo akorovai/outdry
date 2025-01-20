@@ -16,10 +16,10 @@ export const useProductApi = () => {
       console.group('ADD PRODUCT DATA:')
       console.log(product)
       console.groupEnd()
-
+      const files = product.links
+      product.links = []
       const productResponse = await api.post(`${BASE_URL}/api/products`, {
         ...product,
-        links: [],
       })
 
       console.log(productResponse)
@@ -31,13 +31,14 @@ export const useProductApi = () => {
         throw new Error('Product ID is undefined after creation.')
       }
 
-      if (product.links && product.links.length > 0) {
-        const uploadedLinks = await uploadProductLinks(productId, product.links as File[])
+      if (files.length > 0) {
+        const uploadedLinks = await uploadProductLinks(productId, files as File[])
         console.log('Links uploaded successfully:', uploadedLinks)
 
         const updatedProductResponse = await api.put(`${BASE_URL}/api/products/${productId}`, {
           ...product,
           links: uploadedLinks,
+          id: productId,
         })
 
         setLoading(false)
@@ -71,7 +72,7 @@ export const useProductApi = () => {
     })
 
     try {
-      const response = await api.post(`${BASE_URL}/api/products/${productId}/uploadLinks`, formData, {
+      const response = await api.post(`${BASE_URL}/api/products/${productId}/images`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

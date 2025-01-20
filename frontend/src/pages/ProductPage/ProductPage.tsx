@@ -32,7 +32,7 @@ const ProductPage: React.FC = (): React.ReactElement => {
         </Promotions>
       </motion.div>
 
-      <CustomerReviews setMessagesNumber={setMessagesNumber} />
+      <CustomerReviews setMessagesNumber={setMessagesNumber} id={id} />
 
       <Footer />
     </ProductPageContainer>

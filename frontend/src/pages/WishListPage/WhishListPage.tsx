@@ -17,7 +17,7 @@ import EmptyListLabel from './EmptyListLabel'
 
 const WishListPage: React.FC = (): React.ReactElement => {
   const { wishListProducts, deleteAllWishListItems, deleteWishListItem } = useWishList()
-  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]) // Начальное значение - пустой массив
+  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const { category } = useParams<{ category: string }>()
 

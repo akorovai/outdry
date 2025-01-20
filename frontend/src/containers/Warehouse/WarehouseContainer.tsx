@@ -201,11 +201,14 @@ const WarehouseContainer: React.FC = (): React.ReactElement => {
     }
     return `$${price.toFixed(2)}`
   }
-  const getSrc = (link: string | File): string => {
+  const getSrc = (link: string | File | Blob): string => {
     if (typeof link === 'string') {
       return link
     }
-    return URL.createObjectURL(link)
+    if (link instanceof File || link instanceof Blob) {
+      return URL.createObjectURL(link)
+    }
+    return ''
   }
   useEffect(() => {
     if (isOverlayVisible) {
@@ -237,10 +240,17 @@ const WarehouseContainer: React.FC = (): React.ReactElement => {
 
   const handleAddProduct = async (product: IProduct) => {
     try {
+      const existingIds = products.map(p => p.id || 0)
+      const min = Math.min(...existingIds) + 1
+      const max = Math.max(...existingIds)
+      const randomId = Math.floor(Math.random() * (max - min + 1)) + min
+
       const mappedProduct = {
         ...product,
         size: sizeMapping[product.size] || product.size,
+        id: randomId,
       }
+
       console.log('Product being sent to backend:', mappedProduct)
       const newProduct = await addProduct(mappedProduct)
       setProducts(prevProducts => [...prevProducts, newProduct])

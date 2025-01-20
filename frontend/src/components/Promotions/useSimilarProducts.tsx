@@ -11,7 +11,7 @@ const useSimilarProducts = (productId: number) => {
   const [similarProducts, setSimilarProducts] = useState<IProduct[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const { token } = useAuth()
+  const { token, BASE_URL } = useAuth()
 
   useEffect(() => {
     const fetchSimilarProducts = async () => {
@@ -19,7 +19,11 @@ const useSimilarProducts = (productId: number) => {
       setError(null)
 
       try {
-        const response = await api.get<ResponseRecord>(`/api/products/${productId}/similar`) // Используем api
+        const response = await api.get<ResponseRecord>(`${BASE_URL}/api/products/${productId}/similar`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
 
         if (response.status === 200 && response.data.message) {
           setSimilarProducts(response.data.message)
@@ -37,7 +41,12 @@ const useSimilarProducts = (productId: number) => {
       }
     }
 
-    fetchSimilarProducts()
+    if (token) {
+      fetchSimilarProducts()
+    } else {
+      setError('No authentication token found')
+      setLoading(false)
+    }
   }, [productId, token])
 
   return { similarProducts, loading, error }

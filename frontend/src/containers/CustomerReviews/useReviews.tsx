@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { IReview } from '../../models/review/IReview.ts'
-import { api } from '@/context/AuthContext/AuthContext.tsx'
+import { api, useAuth } from '@/context/AuthContext/AuthContext.tsx'
 
 interface ResponseRecord {
   code: number
@@ -18,15 +18,20 @@ const useReviews = (productId: number) => {
   const [reviews, setReviews] = useState<IReview[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
+  const { token, BASE_URL } = useAuth()
 
   const fetchReviews = async () => {
-    if (loading) return // Защита от повторных запросов
+    if (loading) return
 
     setLoading(true)
     setError(null)
 
     try {
-      const response = await api.get<ResponseRecord>(`/api/reviews/product/${productId}`) // Используем api
+      const response = await api.get<ResponseRecord>(`${BASE_URL}/api/reviews/product/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
       if (response.status === 200 && Array.isArray(response.data.message)) {
         setReviews(response.data.message)
@@ -51,7 +56,11 @@ const useReviews = (productId: number) => {
     setError(null)
 
     try {
-      const response = await api.post<ResponseRecord>('/api/reviews', reviewData) // Используем api
+      const response = await api.post<ResponseRecord>('${BASE_URL}/api/reviews', reviewData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
       if (response.status === 201) {
         await fetchReviews()
@@ -72,10 +81,10 @@ const useReviews = (productId: number) => {
   }
 
   useEffect(() => {
-    if (productId) {
+    if (productId && token) {
       fetchReviews()
     }
-  }, [productId]) // Вызываем fetchReviews только при изменении productId
+  }, [productId, token])
 
   return { reviews, loading, error, fetchReviews, addReview }
 }

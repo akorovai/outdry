@@ -112,7 +112,6 @@ const ProductDescription: React.FC<IProductDescriptionProps> = ({ messagesNumber
   const handleAddToCart = async () => {
     if (!id) return
 
-    // Ensure a color and size are selected before adding to cart
     if (!selectedColor || !selectedSize) {
       alert('Please select a color and size before adding to cart.')
       return

@@ -3,7 +3,8 @@ import { colors, fonts } from '../../../../consts'
 
 export const InformationContainer = styled.div`
   display: flex;
-  width: 188px;
+  width: 100%;
+  max-width: 188px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
@@ -16,14 +17,19 @@ export const InformationContainer = styled.div`
     opacity 0.3s ease,
     transform 0.3s ease;
   z-index: 2;
+
+  @media (max-width: 768px) {
+    width: 90%;
+    margin-left: 10px;
+  }
 `
 
 export const PromotionCardContainer = styled.div<{ imageUrl: string }>`
   display: flex;
-  padding: 500px 360px 40px 20px;
+  padding: 40% 20% 40px 20px;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: center;
+  align-items: flex-start;
   background-image: url(${({ imageUrl }) => imageUrl});
   background-size: cover;
   background-position: center;
@@ -47,14 +53,22 @@ export const PromotionCardContainer = styled.div<{ imageUrl: string }>`
     opacity: 1;
     transform: translateY(0);
   }
+
+  @media (max-width: 768px) {
+    padding: 30% 10% 20px 10px;
+  }
 `
 
 export const PromotionText = styled.span`
   color: ${colors.WHITE};
   font-family: ${fonts.POPPINS};
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 700;
   text-transform: uppercase;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `
 
 export const PromotionLabelContainer = styled.div`
@@ -75,12 +89,22 @@ export const PromotionLabelContainer = styled.div`
     opacity: 0;
     transform: translateY(-20px);
   }
+
+  @media (max-width: 768px) {
+    top: 10px;
+    right: 10px;
+    padding: 6px 12px;
+  }
 `
 
 export const PromotionLabelText = styled.span`
-  color: ${colors.WHITE}; // Белый текст
+  color: ${colors.WHITE};
   font-family: ${fonts.POPPINS};
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
   text-transform: uppercase;
+
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+  }
 `

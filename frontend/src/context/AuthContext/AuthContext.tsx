@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { User, AuthResponse, Credentials, UserData, AuthContextType } from './types'
 import storage from '@/consts/storage'
-import { localStorageService } from '../../services'
+import { localStorageService } from '@/services'
 import AuthEndpoints from './AuthEndpoints'
 import { jwtDecode } from 'jwt-decode'
 

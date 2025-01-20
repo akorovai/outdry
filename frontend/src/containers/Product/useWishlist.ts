@@ -9,7 +9,7 @@ const useWishlist = (productId: string) => {
   const [error, setError] = useState<string | null>(null)
 
   const checkWishlistStatus = useCallback(async () => {
-    if (!token || !productId || isLoading) return
+    if (!token || !productId) return
 
     setIsLoading(true)
     setError(null)
@@ -22,7 +22,7 @@ const useWishlist = (productId: string) => {
       })
 
       if (response.status >= 200 && response.status < 300) {
-        setIsInWishlist(response.data.isInWishlist)
+        setIsInWishlist(response.data.message)
       } else {
         throw new Error('Failed to check wishlist status')
       }
@@ -31,8 +31,14 @@ const useWishlist = (productId: string) => {
     } finally {
       setIsLoading(false)
     }
-  }, [token, BASE_URL, productId, isLoading])
+  }, [token, BASE_URL, productId])
 
+  // Вызов checkWishlistStatus при монтировании или изменении productId/token
+  useEffect(() => {
+    checkWishlistStatus()
+  }, [checkWishlistStatus])
+
+  // Функция для добавления в wishlist
   const addToWishlist = useCallback(async () => {
     if (!token || !productId || isLoading) return
 
@@ -62,6 +68,7 @@ const useWishlist = (productId: string) => {
     }
   }, [token, BASE_URL, productId, isLoading])
 
+  // Функция для удаления из wishlist
   const removeFromWishlist = useCallback(async () => {
     if (!token || !productId || isLoading) return
 
@@ -86,12 +93,6 @@ const useWishlist = (productId: string) => {
       setIsLoading(false)
     }
   }, [token, BASE_URL, productId, isLoading])
-
-  useEffect(() => {
-    if (token && productId) {
-      checkWishlistStatus()
-    }
-  }, [token, productId]) // Убрали checkWishlistStatus из зависимостей
 
   return {
     isInWishlist,

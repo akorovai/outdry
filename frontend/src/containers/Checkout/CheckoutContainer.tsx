@@ -16,15 +16,17 @@ import {
   ThankYouText,
   WrapperContainer,
 } from './CheckoutContainer.styled'
-import { CheckoutForm } from './CheckoutForm'
-import { ProductList } from './ProductList'
-import { Subtotal } from './Subtotal'
-import { HassleFreeReturns } from './HassleFreeReturns'
+import { CheckoutForm } from './components/CheckoutForm'
+import { ProductList } from './components/ProductList'
+import { Subtotal } from './components/Subtotal'
+import { HassleFreeReturns } from './components/HassleFreeReturns'
 import { colors } from '@/consts'
 import { useNavigate } from 'react-router-dom'
-import routePath from '../../consts/routePath.ts'
-
+import routePath from '@/consts/routePath.ts'
+import { useShoppingCart } from './hooks/useShoppingCart'
 import { validateCity, validatePhone, validateRequired, validateState, validateZipCode } from './validators.ts'
+import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
+import useCreateOrder from './hooks/useCreateOrder'
 
 interface Product {
   id: string
@@ -52,7 +54,11 @@ const imageVariants = {
 
 const CheckoutContainer: FC = (): ReactElement => {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
+  const { cartItems } = useShoppingCart()
+  const { user } = useAuth()
+  const { createOrder } = useCreateOrder()
+
+  const [email, setEmail] = useState(user?.email || '')
   const [fullName, setFullName] = useState('')
   const [address, setAddress] = useState('')
   const [city, setCity] = useState('')
@@ -64,16 +70,14 @@ const CheckoutContainer: FC = (): ReactElement => {
   const [deliveryTime, setDeliveryTime] = useState('3-5 business days')
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('Visa')
 
-  const [products] = useState<Product[]>([
-    {
-      id: '1',
-      name: 'Geo Palms - Mens Recycled Zip Hoodie - Grey',
-      price: 45.0,
-      quantity: 1,
-      image: 'path/to/image',
-      variant: 'Grey/XS',
-    },
-  ])
+  const products: Product[] = cartItems.map(item => ({
+    id: item.product.id.toString(),
+    name: item.product.name,
+    price: item.product.price,
+    quantity: item.quantity,
+    image: item.product.imageUrl,
+    variant: `${item.product.color}/${item.product.size}`,
+  }))
 
   const subtotal = products.reduce((total, product) => total + product.price * product.quantity, 0)
 
@@ -140,9 +144,41 @@ const CheckoutContainer: FC = (): ReactElement => {
     }
   }
 
-  const handleCompletePayment = () => {
-    console.log('Payment completed!')
-    setCurrentStep(4)
+  const handleCompletePayment = async () => {
+    try {
+      const getLocalDateTime = (deliveryTime: string): string => {
+        const daysMatch = deliveryTime.match(/\d+/g)
+        const maxDays = daysMatch ? Math.max(...daysMatch.map(Number)) : 0
+        const currentDate = new Date()
+        currentDate.setDate(currentDate.getDate() + maxDays)
+
+        return currentDate.toISOString().slice(0, 19)
+      }
+
+      const localDateTime = getLocalDateTime(deliveryTime)
+
+      const orderData = {
+        email,
+        addressInfo: {
+          fullName,
+          state,
+          street: address,
+          apartment: '0',
+          postalCode: `${zipCode.slice(0, 2)}-${zipCode.slice(2)}`,
+          city,
+          phone,
+          userId: Number(user?.userId),
+        },
+        shippingPrice: shippingCost,
+        shippingTime: localDateTime,
+        paymentMethod: selectedPaymentMethod.toUpperCase(),
+      }
+      console.log(orderData)
+      await createOrder(orderData)
+      setCurrentStep(4)
+    } catch (err) {
+      console.error('Failed to create order:', err)
+    }
   }
 
   const getButtonText = (step: number): string => {

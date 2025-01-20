@@ -1,17 +1,23 @@
 import { useEffect, useState } from 'react'
+import axios from 'axios' // Import Axios
 import { IProduct } from '@/models'
-import { api, useAuth } from '@/context/AuthContext/AuthContext.tsx'
+import { useAuth } from '@/context/AuthContext/AuthContext.tsx'
 
 const useDiscountedProducts = () => {
   const [products, setProducts] = useState<IProduct[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const { token } = useAuth()
+  const { token, BASE_URL } = useAuth()
 
   useEffect(() => {
     const fetchDiscountedProducts = async () => {
       try {
-        const response = await api.get('/api/products/discounted') // Используем api
+        // Use Axios directly with the token in the headers
+        const response = await axios.get(`${BASE_URL}/api/products/discounted`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the token to the request headers
+          },
+        })
 
         if (response.status !== 200) {
           throw new Error('Failed to fetch discounted products')
@@ -30,7 +36,7 @@ const useDiscountedProducts = () => {
     }
 
     fetchDiscountedProducts()
-  }, [token])
+  }, [token]) // Re-fetch when the token changes
 
   return { products, loading, error }
 }

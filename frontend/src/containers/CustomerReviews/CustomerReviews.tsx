@@ -1,5 +1,4 @@
 import React, { SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { RatingSummary } from './RatingSummary'
 import { ReviewsSection } from './ReviewsSection'
 import { ComponentContainer } from './styles'
@@ -18,24 +17,24 @@ const containerVariants = {
 
 interface ICustomerReviews {
   setMessagesNumber: React.Dispatch<SetStateAction<number>>
+  id: string | undefined
 }
 
-const CustomerReviews: React.FC<ICustomerReviews> = ({ setMessagesNumber }) => {
-  const { id } = useParams<{ id: string }>()
-  const productId = parseInt(id || '0')
+const CustomerReviews: React.FC<ICustomerReviews> = ({ setMessagesNumber, id }) => {
+  const productId = Number(id)
   const { reviews, fetchReviews, addReview } = useReviews(productId)
   const [isOverlayVisible, setIsOverlayVisible] = useState(false)
 
   useEffect(() => {
     const loadReviews = async () => {
       try {
-        // await fetchReviews()
+        await fetchReviews()
       } catch (error) {
         console.error('Failed to fetch reviews:', error)
       }
     }
     loadReviews()
-  }, [fetchReviews])
+  }, [])
 
   useEffect(() => {
     setMessagesNumber(reviews.length)

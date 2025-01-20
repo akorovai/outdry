@@ -1,7 +1,7 @@
-import React from 'react';
-import { Footer, Navbar, Promotions } from '@/components';
-import { HeroSection, PromotionsSection } from '../../containers';
-import { ColorfulTitleText, MainTitleText, PageContainer } from './HomePage.styled';
+import React from 'react'
+import { Footer, Navbar, Promotions } from '@/components'
+import { HeroSection, PromotionsSection } from '@/containers'
+import { ColorfulTitleText, MainTitleText, PageContainer } from './HomePage.styled'
 
 const HomePage: React.FC = (): React.ReactElement => {
   return (
@@ -36,7 +36,7 @@ const HomePage: React.FC = (): React.ReactElement => {
 
       <Footer />
     </PageContainer>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage

@@ -26,22 +26,28 @@ const ProductsList: FC<IProductListProps> = ({
   return (
     <SectionContainer>
       <ProductsSection>
-        {products.map(product => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            colors={[product.color.name]}
-            price={product.price}
-            isOnSale={product.discount > 0}
-            isWishlist={isWishList}
-            size={product.size}
-            color={product.color.name}
-            discountPercent={product.discount}
-            category={product.gender.toLowerCase()}
-            onTrashClick={() => onDeleteItem(product.id)} // Передайте функцию удаления
-          />
-        ))}
+        {products.map(product => {
+          if (product.id === undefined || product.discount === undefined) {
+            return null
+          }
+
+          return (
+            <ProductCard
+              key={product.id}
+              id={product.id}
+              name={product.name}
+              colors={[product.color.name]}
+              price={product.price}
+              isOnSale={product.discount > 0}
+              isWishlist={isWishList}
+              size={product.size}
+              color={product.color.name}
+              discountPercent={product.discount}
+              category={product.gender.toLowerCase()}
+              onTrashClick={() => onDeleteItem(product.id || -1)}
+            />
+          )
+        })}
       </ProductsSection>
       {totalPages > 1 && (
         <ListNavigationPanel>

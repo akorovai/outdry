@@ -12,7 +12,7 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({ productId }) => {
   const { isInWishlist, isLoading, addToWishlist, removeFromWishlist } = useWishlist(productId)
 
   const handleWishlistToggle = async () => {
-    if (isLoading) return // Защита от повторных запросов
+    if (isLoading) return
 
     if (isInWishlist) {
       await removeFromWishlist()

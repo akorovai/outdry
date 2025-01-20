@@ -2,7 +2,7 @@ export interface IProduct {
   id?: number
   name: string
   description: string
-  links: string[] | File[]
+  links: (string | File)[]
   amount: number
   size: string
   type: { id: number; name: string }
@@ -10,15 +10,4 @@ export interface IProduct {
   price: number
   discount?: number
   gender: string
-}
-
-export interface ColorResponse {
-  id: number
-  name: string
-  code: string
-}
-
-export interface TypeResponse {
-  id: number
-  name: string
 }
